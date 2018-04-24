@@ -1,0 +1,24 @@
+{
+  "name": "test",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost:5000/",
+  "dependencies": {
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-scripts": "1.1.4",
+    "express": "^4.16.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "client": "cd client && yarn start",
+    "server": "nodemon server.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.0"
+  }
+}

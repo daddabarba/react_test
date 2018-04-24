@@ -1,0 +1,117 @@
+body {
+    font: 14px "Century Gothic", Futura, sans-serif;
+    margin: 20px;
+}
+
+ol, ul {
+    padding-left: 30px;
+}
+
+.board-row:after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+.status {
+    margin-bottom: 10px;
+}
+
+.square {
+    background: #fff;
+    border: 1px solid #999;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
+    height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 34px;
+}
+
+.square:focus {
+    outline: none;
+}
+
+.kbd-navigation .square:focus {
+    background: #ddd;
+}
+
+.game {
+    display: flex;
+    flex-direction: row;
+}
+
+.game-info {
+    margin-left: 20px;
+}
+
+.post{
+    background: #0091ff;
+    border: 0;
+    float: left;
+    font-size: 24px;
+    font-family: Arimo;
+    line-height: 34px;
+    height: 180px;
+    margin-right: 40px;
+    margin-left: 80px;
+    margin-top: 40px;
+    padding: 0px;
+    text-align: center;
+    width: 340px;
+    clear: left;
+    border-radius: 1px;
+    box-shadow: 1px 3px #899297;
+}
+
+
+.postBody{
+    background: #0091ff;
+    border: 0;
+    float: left;
+    font-size: 24px;
+    font-family: Arimo;
+    line-height: 34px;
+    height: 100px;
+    margin-left: 10px;
+    margin-top: 25px;
+    padding: 0;
+    text-align: center;
+    width: 320px;
+    border-radius: 1px;
+}
+.postLocation{
+    background: #000089;
+    border: 0;
+    float: left;
+    font-size: 24px;
+    font-family: Arimo;
+    line-height: 34px;
+    height: 34px;
+    margin-left: -10px;
+    margin-top: 5px;
+    padding: 0;
+    text-align: center;
+    width: 180px;
+    border-radius: 1px;
+}
+.postPrice{
+    background: #000089;
+    border: 0;
+    float: left;
+    font-size: 24px;
+    line-height: 34px;
+    font-family: Arimo;
+    height: 34px;
+    margin-left: 95px;
+    margin-right: -5px;
+    margin-top: 5px;
+    padding: 0;
+    text-align: center;
+    width: 80px;
+    border-radius: 1px;
+}
