@@ -5,7 +5,8 @@ const port = process.env.PORT || 5000;
 
 
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:5000/mydb";
+var url = "mongodb://localhost:27018/mydb";
+
 
 class db {
     constructor(client, address){
@@ -21,9 +22,10 @@ class db {
     }
 
     handleDB(err,db){
-        if (err)
+        if (err) {
             this.state = "Failed to load DB";
-        else {
+            throw err;
+        }else {
             this.state = "Database created!";
             db.close();
         }
