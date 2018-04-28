@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+import FormData from 'form-data';
+
 class Post extends React.Component {
     constructor(props) {
         super(props);
@@ -111,7 +113,15 @@ class Main extends React.Component{
     }
 
     callApi = async () => {
+        //const myRequest = new Request('/api/hello', {method: 'POST', body: '{"foo":"bar"}'});
+
+        const form = new FormData();
+        form.append('a', 1);
+
         const response = await fetch('/api/hello');
+        //fetch(myRequest)
+            //.then(response => {return response.json()})
+            //.catch(error => console.error(error));
         const body = await response.json();
 
         if (response.status !== 200) throw Error(body.message);
