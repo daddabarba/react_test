@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-import FormData from 'form-data';
+import axios from 'axios';
+var querystring = require('querystring');
 
 class Post extends React.Component {
     constructor(props) {
@@ -107,26 +108,15 @@ class Main extends React.Component{
     }
 
     componentDidMount() {
-        this.callApi()
-            .then(res => this.setState({ response: res.express }))
-            .catch(err => this.setState({ response: err }));
+        var body = this.callApi();
+
+        this.setState({response: body.express});
     }
 
-    callApi = async () => {
-        //const myRequest = new Request('/api/hello', {method: 'POST', body: '{"foo":"bar"}'});
+    callApi = () => {
 
-        const form = new FormData();
-        form.append('a', 1);
-
-        const response = await fetch('/api/hello');
-        //fetch(myRequest)
-            //.then(response => {return response.json()})
-            //.catch(error => console.error(error));
-        const body = await response.json();
-
-        if (response.status !== 200) throw Error(body.message);
-
-        return body;
+        var data = this.state.body;
+        axios.post('/api/hello', data).then(res => {return res.json()});
     };
 
     buttonEvent(sel){
