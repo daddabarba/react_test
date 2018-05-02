@@ -55,6 +55,9 @@ var dataBase = new db(MongoClient, url);
 dataBase.connect();
 
 app.get('/api/hello', (req, res) => {
+    console.log('-------------------Sending Response');
+    console.log(dataBase.state);
+    
     res.send({ express: dataBase.state});
 });
 

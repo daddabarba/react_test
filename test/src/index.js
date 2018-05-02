@@ -45,16 +45,16 @@ class Feed extends React.Component {
     }
 
     renderPost(i){
-        const post = this.state.posts[i]
+        const post = this.state.posts[i];
         return(
             <Post body={post.body} location={post.location} price={post.price}/>
         );
     }
 
     addPost(){
-        const posts = this.state.posts
+        const posts = this.state.posts;
 
-        posts.push({body: "I am NOT happy!", location: "Miami", price: "4 lleuri"})
+        posts.push({body: "I am NOT happy!", location: "Miami", price: "4 lleuri"});
         this.setState({posts: posts});
     }
 
@@ -116,7 +116,9 @@ class Main extends React.Component{
     callApi = () => {
 
         var data = this.state.body;
-        axios.post('/api/hello', data).then(res => {return res.json()});
+        axios.post('/api/hello', data)
+            .then(res => {return res.json()})
+            .catch(err => {return err.toString()});
     };
 
     buttonEvent(sel){
