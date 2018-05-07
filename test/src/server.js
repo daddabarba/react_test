@@ -1,10 +1,17 @@
 const express = require('express');
-
+var MongoClient = require('mongodb').MongoClient;
+const bodyParser = require('body-parser');
+const jsonParse = bodyParser.json();
 const app = express();
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 const port = process.env.PORT || 5000;
 
 
-var MongoClient = require('mongodb').MongoClient;
+
 var url = "mongodb://localhost:27018/";
 
 
@@ -54,11 +61,11 @@ var dataBase = new db(MongoClient, url);
 
 dataBase.connect();
 
-app.get('/api/hello', (req, res) => {
-    console.log('-------------------Sending Response');
+app.post('/api/hello', jsonParse, (req, res) => {
+    console.log('Sending Response');
     console.log(dataBase.state);
-    
-    res.send({ express: dataBase.state});
+
+    res.send({ express: "ciao " + req.body.a});
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

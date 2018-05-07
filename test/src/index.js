@@ -108,17 +108,18 @@ class Main extends React.Component{
     }
 
     componentDidMount() {
-        var body = this.callApi();
-
-        this.setState({response: body.express});
+        this.callApi();
     }
 
     callApi = () => {
 
-        var data = this.state.body;
-        axios.post('/api/hello', data)
-            .then(res => {return res.json()})
-            .catch(err => {return err.toString()});
+        var data = {a: "sentence"};
+        axios.post('http://127.0.0.1:5000/api/hello', data)
+            .then(res => {
+                console.log(res)
+                this.setState({response: res.data.express})
+            })
+            .catch(err => {console.log( err.toString())});
     };
 
     buttonEvent(sel){
