@@ -83,6 +83,52 @@ class Feed extends React.Component {
     }
 }
 
+
+class Profile extends React.Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            username: props.username,
+            writtenPost: null
+        }
+
+        this.handleInput = this.handleInput.bind(this);
+    }
+
+    savePost(){
+
+    }
+
+    callApi = () => {
+
+        var data = {body: this.state.writtenPost, user: this.state.username};
+        axios.post('http://127.0.0.1:5000/api/post', data)
+            .then(res => {
+                console.log(res)
+                this.setState({response: res.data.express})
+            })
+            .catch(err => {console.log( err.toString())});
+    };
+
+    handleInput(event){
+       this.setState({writtenPost: event.target.value});
+    }
+
+    render(){
+        var posts = []
+
+        return(
+            <div>
+                <input type="text" onChange={this.handleInput} />
+                <div>{this.state.username}</div>
+                <button name="Add" onClick={() => this.addPost()}> Add </button>
+                {posts}
+            </div>
+        );
+    }
+}
+
 class Home extends React.Component{
     constructor(props){
         super(props);
