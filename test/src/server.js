@@ -48,7 +48,7 @@ class db {
 
             var dbo = db.db("mydb");
             dbo.createCollection("feeds", this.handleConnection);
-            db.close();
+            //db.close();
         }
     }
 
