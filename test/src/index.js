@@ -83,49 +83,76 @@ class Feed extends React.Component {
     }
 }
 
+class ProfileLogin extends React.Component{
+    constructor(props){
+        super(props);
+    }
+
+    render(){
+        var posts = [];
+
+        return(
+            <div>
+                <input type="text" onChange= {(event) => this.setState({inputName: event.target.value})} />
+                <input type="text" onChange= {(event) => this.setState({inputPass: event.target.value})} />
+
+                <button name="Add" onClick={() => {this.props.logInFun(this.state.inputName, this.state.inputPass)}}> Add </button>
+            </div>
+        );
+    }
+}
+
+class ProfileAccess extends React.Component{
+    constructor(props){
+        super(props)
+    }
+
+    render(){
+        return(
+            <div>
+                {this.props.userID}
+            </div>
+        )
+    }
+}
 
 class Profile extends React.Component {
     constructor(props){
         super(props);
 
         this.state = {
-            username: props.username,
-            writtenPost: null
-        }
-
-        this.handleInput = this.handleInput.bind(this);
+            username: props.username
+        };
     }
 
-    savePost(){
+    callApi = (username, password) => {
 
-    }
 
-    callApi = () => {
 
-        var data = {body: this.state.writtenPost, user: this.state.username};
-        axios.post('http://127.0.0.1:5000/api/post', data)
+        var data = {usrname: username, password: password};
+        axios.post('http://127.0.0.1:5000/api/login', data)
             .then(res => {
-                console.log(res)
-                this.setState({response: res.data.express})
+                console.log("Respose: " + res);
+                this.setState({username: res.data.userID});
             })
             .catch(err => {console.log( err.toString())});
     };
 
-    handleInput(event){
-       this.setState({writtenPost: event.target.value});
+    getPage(){
+        if(this.state.username == null)
+            return <ProfileLogin logInFun={this.callApi} />;
+
+        return <ProfileAccess userID={this.state.username} />
     }
 
     render(){
-        var posts = []
+        var page = this.getPage();
 
         return(
             <div>
-                <input type="text" onChange={this.handleInput} />
-                <div>{this.state.username}</div>
-                <button name="Add" onClick={() => this.addPost()}> Add </button>
-                {posts}
+                {page}
             </div>
-        );
+        )
     }
 }
 
@@ -149,36 +176,30 @@ class Main extends React.Component{
 
         this.state = {
             selection: "Home",
-            response: null
+            username: null
         }
     }
 
-    componentDidMount() {
-        this.callApi();
+    getPage(){
+        if(this.state.selection == "Home")
+            return <Home/>;
+        if(this.state.selection == "Feed")
+            return <Feed/>;
+        if(this.state.selection == "Profile")
+            return <Profile username={this.state.username}/>;
     }
-
-    callApi = () => {
-
-        var data = {a: "sentence"};
-        axios.post('http://127.0.0.1:5000/api/hello', data)
-            .then(res => {
-                console.log(res)
-                this.setState({response: res.data.express})
-            })
-            .catch(err => {console.log( err.toString())});
-    };
 
     buttonEvent(sel){
         this.setState({selection: sel});
     }
 
     render(){
-        var page = (this.state.selection=="Home") ? <Home/> : <Feed />;
+        var page = this.getPage();
 
         return(
             <div>
                 <button name="home" onClick={() => this.buttonEvent("Home")}>Home</button>
-                <button name="feed" onClick={() => this.buttonEvent("Feed")}>Feed</button>
+                <button name="profile" onClick={() => this.buttonEvent("Profile")}>Profile</button>
 
                 <div>{this.state.response}</div>
 

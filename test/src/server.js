@@ -15,12 +15,12 @@ const port = process.env.PORT || 5000;
 var url = "mongodb://localhost:27018/";
 
 
-class db {
+class dbWrap {
     constructor(client, address){
         this.data = {
             clt: client,
             url: address,
-            collections: null
+            collections: ["feeds", "users"]
         };
 
         this.state = 'DB not created';
@@ -35,7 +35,7 @@ class db {
         console.log(this.state);
         console.log("Collection created!");
 
-        this.state = this.state + "Collection created!";
+        this.state = this.state + " Collection created!";
     }
 
     handleDB(err,db){
@@ -43,11 +43,16 @@ class db {
             this.state = "Failed to load DB";
             throw err;
         }else {
-
             this.state = "Database created!";
 
-            var dbo = db.db("mydb");
-            dbo.createCollection("feeds", this.handleConnection);
+            this.db = db.db("mydb");
+
+
+            for (var i in this.data.collections){
+                console.log("Creating collection " + this.data.collections[i]);
+                this.db.createCollection(this.data.collections[i], this.handleConnection);
+            }
+
             //db.close();
         }
     }
@@ -57,15 +62,24 @@ class db {
     }
 }
 
-var dataBase = new db(MongoClient, url);
+var dataBase = new dbWrap(MongoClient, url);
 
 dataBase.connect();
 
 app.post('/api/hello', jsonParse, (req, res) => {
-    console.log('Sending Response');
+    console.log('Sending Response for hello request');
     console.log(dataBase.state);
 
     res.send({ express: "ciao " + req.body.a});
+});
+
+app.post('/api/login', jsonParse, (req, res) => {
+    console.log('Sending Response for login request');
+    console.log('Searching user: ' + req.body.usrname + " with password " + req.body.password);
+
+    console.log(dataBase.db.collection("users").findOne({username: req.body.usrname, password: req.body.password}));
+
+    res.send({ userID: null});
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
