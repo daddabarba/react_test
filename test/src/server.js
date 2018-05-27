@@ -77,9 +77,18 @@ app.post('/api/login', jsonParse, (req, res) => {
     console.log('Sending Response for login request');
     console.log('Searching user: ' + req.body.usrname + " with password " + req.body.password);
 
-    console.log(dataBase.db.collection("users").findOne({username: req.body.usrname, password: req.body.password}));
+    dataBase.db.collection("users").findOne({username: req.body.usrname, password: req.body.password}).then(
+        function(value){
 
-    res.send({ userID: null});
+            res.send({userID: value._id});
+        }
+
+    ).catch(
+        function () {
+            res.send({userID: null});
+        }
+    );
+
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
