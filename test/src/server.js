@@ -1,5 +1,6 @@
 const express = require('express');
 var MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectID;
 const bodyParser = require('body-parser');
 const jsonParse = bodyParser.json();
 const app = express();
@@ -73,11 +74,31 @@ app.post('/api/hello', jsonParse, (req, res) => {
     res.send({ express: "ciao " + req.body.a});
 });
 
+app.post('/api/getUType', jsonParse, (req, res) => {
+    console.log('Sending Response for type request');
+    console.log('Searching id: ' + req.body._id );
+
+    dataBase.db.collection("users").findOne({_id: ObjectId(req.body._id)}).then(
+        function(value){
+
+            res.send({type: value.type});
+
+            console.log(value.type);
+        }
+
+    ).catch(
+        function () {
+            res.send({userID: null});
+        }
+    );
+
+});
+
 app.post('/api/login', jsonParse, (req, res) => {
     console.log('Sending Response for login request');
-    console.log('Searching user: ' + req.body.usrname + " with password " + req.body.password);
+    console.log('Searching user: ' + req.body.username + " with password " + req.body.password);
 
-    dataBase.db.collection("users").findOne({username: req.body.usrname, password: req.body.password}).then(
+    dataBase.db.collection("users").findOne(req.body).then(
         function(value){
 
             res.send({userID: value._id});

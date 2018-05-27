@@ -119,15 +119,67 @@ class ProfileLogin extends React.Component{
     }
 }
 
-class ProfileAccess extends React.Component{
+class ProfileAccessGiver extends React.Component{
     constructor(props){
-        super(props)
+        super(props);
     }
 
     render(){
         return(
             <div>
-                {this.props.userID}
+               You are a Giver
+            </div>
+        )
+    }
+}
+
+class ProfileAccessReceiver extends React.Component{
+    constructor(props){
+        super(props);
+    }
+
+    render(){
+        return(
+            <div>
+                You are a Receiver
+            </div>
+        )
+    }
+}
+
+class ProfileAccess extends React.Component{
+    constructor(props){
+        super(props);
+    }
+
+    componentDidMount(){
+        this.callApi(this.props.callback.getUID())
+    }
+
+    callApi = (UID) => {
+
+        var data = {_id: UID};
+        axios.post('http://127.0.0.1:5000/api/getUType', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.props.callback.setUType(res.data.type);
+            })
+            .catch(err => {console.log( err.toString())});
+    };
+
+    getPage(){
+        if(this.props.callback.getUType() === "Giver")
+            return <ProfileAccessGiver />;
+        if(this.props.callback.getUType() === "Receiver")
+            return <ProfileAccessReceiver />;
+    }
+
+    render(){
+        var page = this.getPage();
+
+        return(
+            <div>
+                {page}
             </div>
         )
     }
@@ -140,7 +192,7 @@ class Profile extends React.Component {
 
     callApi = (username, password) => {
 
-        var data = {usrname: username, password: password};
+        var data = {username: username, password: password};
         axios.post('http://127.0.0.1:5000/api/login', data)
             .then(res => {
                 console.log("Respose: " + res);
@@ -153,7 +205,7 @@ class Profile extends React.Component {
         if(this.props.callback.getUID() == null)
             return <ProfileLogin logInFun={this.callApi} />;
 
-        return <div><ProfileAccess userID={this.props.callback.getUID()} /></div>
+        return <div><ProfileAccess callback={this.props.callback} /></div>
     }
 
     render(){
@@ -193,19 +245,34 @@ class Main extends React.Component{
         this.getUserID = this.getUserID.bind(this);
         this.setUserID = this.setUserID.bind(this);
         this.logOut = this.logOut.bind(this);
+        this.setUType = this.setUType.bind(this);
+        this.getUType = this.getUType.bind(this);
     }
 
     componentDidMount(){
         var ID = localStorage.getItem('UID');
+        var type = localStorage.getItem('type');
         var lastPage = localStorage.getItem('lastPage');
 
         if(ID === "null")
             ID = null;
+        if(type === "null")
+            type = null;
 
         if(lastPage != null)
             this.setState({selection: lastPage});
 
         this.setUserID(ID);
+        this.setUType(type);
+    }
+
+    setUType(type){
+        this.setState({type:type});
+        localStorage.setItem('type', type);
+    }
+
+    getUType(){
+        return this.state.type;
     }
 
     logOut(){
@@ -228,7 +295,7 @@ class Main extends React.Component{
         if(this.state.selection == "Feed")
             return <Feed/>;
         if(this.state.selection == "Profile")
-            return <Profile callback = {{setUID: this.setUserID, getUID: this.getUserID, logout: this.logout}}/>;
+            return <Profile callback = {{setUID: this.setUserID, getUID: this.getUserID, logout: this.logout, setUType: this.setUType, getUType: this.getUType}}/>;
     }
 
     buttonEvent(sel){
