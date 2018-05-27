@@ -66,7 +66,7 @@ class Feed extends React.Component {
     }
 
     render(){
-        var posts = []
+        var posts = [];
 
         for(var i=0; i<this.state.posts.length; i++){
             posts.push(<div>{this.renderPost(i)}<br /></div>)
@@ -86,6 +86,22 @@ class Feed extends React.Component {
 class ProfileLogin extends React.Component{
     constructor(props){
         super(props);
+
+        this.state = {
+            stuff: null
+        };
+
+        this.log = this.log.bind(this);
+    }
+
+    _handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            this.log();
+        }
+    };
+
+    log(){
+        this.props.logInFun(this.state.inputName, this.state.inputPass);
     }
 
     render(){
@@ -93,10 +109,11 @@ class ProfileLogin extends React.Component{
 
         return(
             <div>
-                <input type="text" onChange= {(event) => this.setState({inputName: event.target.value})} />
-                <input type="text" onChange= {(event) => this.setState({inputPass: event.target.value})} />
+                <input type="text" onChange= {(event) => this.setState({inputName: event.target.value})} onKeyPress={this._handleKeyPress} />
+                <input type="text" onChange= {(event) => this.setState({inputPass: event.target.value})} onKeyPress={this._handleKeyPress} />
 
-                <button name="Log In" onClick={() => {this.props.logInFun(this.state.inputName, this.state.inputPass)}}> Log In </button>
+                <button name="Log In" onClick={() => {this.log()}}> Log In </button>
+                {this.state.stuff}
             </div>
         );
     }
@@ -182,7 +199,7 @@ class Main extends React.Component{
         var ID = localStorage.getItem('UID');
         var lastPage = localStorage.getItem('lastPage');
 
-        if(ID == "null")
+        if(ID === "null")
             ID = null;
 
         if(lastPage != null)
