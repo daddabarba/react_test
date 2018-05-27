@@ -17,6 +17,19 @@ ol, ul {
     margin-bottom: 10px;
 }
 
+.ft-left{
+    float: left;
+}
+
+.ft-right{
+    float: right;
+    margin-left: 50px;
+}
+
+.entire {
+    width: 1050px;
+}
+
 .square {
     background: #fff;
     border: 1px solid #999;

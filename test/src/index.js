@@ -30,53 +30,24 @@ class Post extends React.Component {
 class Feed extends React.Component {
     constructor(props){
         super(props);
-
-        this.state = {
-            posts: [
-                {body: "hello everyone", location: "Groningen", price: "2 lleuri"},
-                {body: "I am happy!", location: "LA", price: "3 lleuri"},
-                {body: "I am NOT happy!", location: "Miami", price: "4 lleuri"},
-                {body: "I am NOT happy!", location: "Miami", price: "4 lleuri"}
-            ],
-            username: null
-        }
-
-        this.handleInput = this.handleInput.bind(this);
     }
 
     renderPost(i){
-        const post = this.state.posts[i];
+        const post = this.props.posts[i];
         return(
-            <Post body={post.body} location={post.location} price={post.price}/>
+            <Post body={post.body} location={post.location} price={post.points}/>
         );
-    }
-
-    addPost(){
-        const posts = this.state.posts;
-
-        posts.push({body: "I am NOT happy!", location: "Miami", price: "4 lleuri"});
-        this.setState({posts: posts});
-    }
-
-    handleInput(event){
-        const state = this.state;
-
-        state.username = event.target.value;
-        this.setState(state);
     }
 
     render(){
         var posts = [];
 
-        for(var i=0; i<this.state.posts.length; i++){
+        for(var i=0; i<this.props.posts.length; i++){
             posts.push(<div>{this.renderPost(i)}<br /></div>)
         }
 
         return(
             <div>
-                <input type="text" onChange={this.handleInput} />
-                <div>{this.state.username}</div>
-                <button name="Add" onClick={() => this.addPost()}> Add </button>
                 {posts}
             </div>
         );
@@ -136,12 +107,52 @@ class ProfileAccessGiver extends React.Component{
 class ProfileAccessReceiver extends React.Component{
     constructor(props){
         super(props);
+
+        this.state = {
+            pubfeeds: [],
+            unpubfeeds: []
+        }
+
+        this.getPubFeeds();
+        this.getUnpubFeeds();
     }
 
+    getPubFeeds = () => {
+
+        var data = {_id: this.props.callback.getUID()};
+        axios.post('http://127.0.0.1:5000/api/getPubFeeds', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.setState({pubfeeds: res.data});
+            })
+            .catch(err => {console.log( err.toString())});
+    };
+
+    getUnpubFeeds = () => {
+
+        var data = {_id: this.props.callback.getUID()};
+        axios.post('http://127.0.0.1:5000/api/getUnpubFeeds', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.setState({unpubfeeds: res.data});
+            })
+            .catch(err => {console.log( err.toString())});
+    };
+
+
     render(){
+
         return(
             <div>
                 You are a Receiver
+                <div className = "entire">
+                    <div className = "ft-left">
+                        <Feed className="ft-left" posts = {this.state.pubfeeds} />
+                    </div>
+                    <div className="ft-right">
+                        <Feed className="ft-right" posts = {this.state.unpubfeeds} />
+                    </div>
+                </div>
             </div>
         )
     }
@@ -169,9 +180,9 @@ class ProfileAccess extends React.Component{
 
     getPage(){
         if(this.props.callback.getUType() === "Giver")
-            return <ProfileAccessGiver />;
+            return <ProfileAccessGiver callback={this.props.callback} />;
         if(this.props.callback.getUType() === "Receiver")
-            return <ProfileAccessReceiver />;
+            return <ProfileAccessReceiver callback={this.props.callback} />;
     }
 
     render(){
@@ -247,6 +258,8 @@ class Main extends React.Component{
         this.logOut = this.logOut.bind(this);
         this.setUType = this.setUType.bind(this);
         this.getUType = this.getUType.bind(this);
+
+        //localStorage.clear();
     }
 
     componentDidMount(){

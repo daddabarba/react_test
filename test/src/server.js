@@ -74,6 +74,40 @@ app.post('/api/hello', jsonParse, (req, res) => {
     res.send({ express: "ciao " + req.body.a});
 });
 
+app.post('/api/getUnpubFeeds', jsonParse, (req, res) => {
+    console.log('Sending Response for unpublished feeds request');
+    console.log('Searching id: ' + req.body._id );
+
+    dataBase.db.collection("feeds").find({UID: ObjectId(req.body._id), body:-1}).toArray().then(
+        function(value){
+            res.send(value);
+        }
+
+    ).catch(
+        function () {
+            res.send({userID: null});
+        }
+    );
+
+});
+
+app.post('/api/getPubFeeds', jsonParse, (req, res) => {
+    console.log('Sending Response for published feeds request');
+    console.log('Searching id: ' + req.body._id );
+
+    dataBase.db.collection("feeds").find({UID: ObjectId(req.body._id), body:{$ne: -1}}).toArray().then(
+        function(value){
+            res.send(value);
+        }
+
+    ).catch(
+        function () {
+            res.send({userID: null});
+        }
+    );
+
+});
+
 app.post('/api/getUType', jsonParse, (req, res) => {
     console.log('Sending Response for type request');
     console.log('Searching id: ' + req.body._id );
@@ -82,8 +116,6 @@ app.post('/api/getUType', jsonParse, (req, res) => {
         function(value){
 
             res.send({type: value.type});
-
-            console.log(value.type);
         }
 
     ).catch(
