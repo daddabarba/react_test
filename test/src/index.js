@@ -96,7 +96,7 @@ class ProfileLogin extends React.Component{
                 <input type="text" onChange= {(event) => this.setState({inputName: event.target.value})} />
                 <input type="text" onChange= {(event) => this.setState({inputPass: event.target.value})} />
 
-                <button name="Add" onClick={() => {this.props.logInFun(this.state.inputName, this.state.inputPass)}}> Add </button>
+                <button name="Log In" onClick={() => {this.props.logInFun(this.state.inputName, this.state.inputPass)}}> Log In </button>
             </div>
         );
     }
@@ -136,7 +136,7 @@ class Profile extends React.Component {
         if(this.props.callback.getUID() == null)
             return <ProfileLogin logInFun={this.callApi} />;
 
-        return <ProfileAccess userID={this.props.callback.getUID()} />
+        return <div><ProfileAccess userID={this.props.callback.getUID()} /></div>
     }
 
     render(){
@@ -175,10 +175,25 @@ class Main extends React.Component{
 
         this.getUserID = this.getUserID.bind(this);
         this.setUserID = this.setUserID.bind(this);
+        this.logOut = this.logOut.bind(this);
     }
 
     componentDidMount(){
-        this.setUserID(localStorage.getItem('UID'));
+        var ID = localStorage.getItem('UID');
+        var lastPage = localStorage.getItem('lastPage');
+
+        if(ID == "null")
+            ID = null;
+
+        if(lastPage != null)
+            this.setState({selection: lastPage});
+
+        this.setUserID(ID);
+    }
+
+    logOut(){
+        this.setState({username: null});
+        localStorage.removeItem('UID');
     }
 
     getUserID(){
@@ -196,11 +211,12 @@ class Main extends React.Component{
         if(this.state.selection == "Feed")
             return <Feed/>;
         if(this.state.selection == "Profile")
-            return <Profile callback = {{setUID: this.setUserID, getUID: this.getUserID}}/>;
+            return <Profile callback = {{setUID: this.setUserID, getUID: this.getUserID, logout: this.logout}}/>;
     }
 
     buttonEvent(sel){
         this.setState({selection: sel});
+        localStorage.setItem('lastPage', sel);
     }
 
     render(){
@@ -210,6 +226,7 @@ class Main extends React.Component{
             <div>
                 <button name="home" onClick={() => this.buttonEvent("Home")}>Home</button>
                 <button name="profile" onClick={() => this.buttonEvent("Profile")}>Profile</button>
+                <button name="logout" onClick={() => this.logOut()}>Log Out</button>
 
                 <div>{this.state.response}</div>
 
