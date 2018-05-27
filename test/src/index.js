@@ -177,12 +177,17 @@ class Main extends React.Component{
         this.setUserID = this.setUserID.bind(this);
     }
 
+    componentDidMount(){
+        this.setUserID(localStorage.getItem('UID'));
+    }
+
     getUserID(){
         return this.state.username
     }
 
     setUserID(userID){
-        this.setState({username:userID})
+        this.setState({username:userID});
+        localStorage.setItem('UID', userID);
     }
 
     getPage(){
