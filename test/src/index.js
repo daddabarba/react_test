@@ -119,30 +119,24 @@ class ProfileAccess extends React.Component{
 class Profile extends React.Component {
     constructor(props){
         super(props);
-
-        this.state = {
-            username: props.username
-        };
     }
 
     callApi = (username, password) => {
-
-
 
         var data = {usrname: username, password: password};
         axios.post('http://127.0.0.1:5000/api/login', data)
             .then(res => {
                 console.log("Respose: " + res);
-                this.setState({username: res.data.userID});
+                this.props.callback.setUID(res.data.userID);
             })
             .catch(err => {console.log( err.toString())});
     };
 
     getPage(){
-        if(this.state.username == null)
+        if(this.props.callback.getUID() == null)
             return <ProfileLogin logInFun={this.callApi} />;
 
-        return <ProfileAccess userID={this.state.username} />
+        return <ProfileAccess userID={this.props.callback.getUID()} />
     }
 
     render(){
@@ -177,7 +171,18 @@ class Main extends React.Component{
         this.state = {
             selection: "Home",
             username: null
-        }
+        };
+
+        this.getUserID = this.getUserID.bind(this);
+        this.setUserID = this.setUserID.bind(this);
+    }
+
+    getUserID(){
+        return this.state.username
+    }
+
+    setUserID(userID){
+        this.setState({username:userID})
     }
 
     getPage(){
@@ -186,7 +191,7 @@ class Main extends React.Component{
         if(this.state.selection == "Feed")
             return <Feed/>;
         if(this.state.selection == "Profile")
-            return <Profile username={this.state.username}/>;
+            return <Profile callback = {{setUID: this.setUserID, getUID: this.getUserID}}/>;
     }
 
     buttonEvent(sel){
