@@ -14,7 +14,7 @@ function drawFractalTree(context, depth, size){
 }
 function drawTree(context, x1, y1, angle, depth, maxDepth){
     var BRANCH_LENGTH = random(0, 5);
-    if (depth != 0){
+    if (depth > 0){
         var x2 = x1 + (cos(angle) * depth * BRANCH_LENGTH);
         var y2 = y1 + (sin(angle) * depth * BRANCH_LENGTH);
 

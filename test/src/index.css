@@ -69,7 +69,6 @@ ol, ul {
     font-size: 24px;
     font-family: Arimo;
     line-height: 34px;
-    height: 180px;
     margin-right: 40px;
     margin-left: 80px;
     margin-top: 40px;
@@ -89,7 +88,6 @@ ol, ul {
     font-size: 24px;
     font-family: Arimo;
     line-height: 34px;
-    height: 100px;
     margin-left: 10px;
     margin-top: 25px;
     padding: 0;
@@ -98,7 +96,7 @@ ol, ul {
     border-radius: 1px;
 }
 .postLocation{
-    background: #000089;
+    background: #899297;
     border: 0;
     float: left;
     font-size: 24px;
@@ -113,7 +111,7 @@ ol, ul {
     border-radius: 1px;
 }
 .postPrice{
-    background: #000089;
+    background: #899297;
     border: 0;
     float: left;
     font-size: 24px;
