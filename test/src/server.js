@@ -163,20 +163,33 @@ app.post('/api/getConfirmation', jsonParse, (req, res) => {
 
 app.post('/api/givePoints', jsonParse, (req, res) => {
     console.log('Sending Response for giving points request');
-    console.log('Searching id: ' + req.body.username + " to give " + req.body.points + " points");
+    console.log('Searching id: ' + req.body.username + " to give " + req.body.points + " points. From " + req.body.me);
 
     var data = req.body;
 
     dataBase.db.collection("users").findOne({username: req.body.username}).then(
         function(value){
             console.log("previous points " + value.points);
+            var givenPoints = data.points;
             data.points = Number(value.points) + Number(data.points);
             console.log("new points " + data.points);
 
             data._id = value._id;
 
             dataBase.db.collection("users").findOneAndUpdate({_id: ObjectId(data._id)}, {$set: {points: data.points}});
-            res.send("Success");
+
+            dataBase.db.collection("users").findOne({_id: ObjectId(req.body.me)}).then(
+                function(value){
+                    data.location = value.location;
+
+                    dataBase.db.collection("feeds").insert({UID: data._id, body:-1, location: data.location, points: givenPoints});
+                    res.send("Success");
+                }
+            ).catch(
+                function () {
+                    res.send(null);
+                }
+            );
         }
 
     ).catch(

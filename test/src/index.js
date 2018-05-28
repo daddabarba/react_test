@@ -186,7 +186,7 @@ class ProfileAccessGiver extends React.Component{
 
     submit = () => {
 
-        var data = {username: this.state.username, points: this.state.points};
+        var data = {username: this.state.username, points: this.state.points, me: this.props.callback.getUID()};
         axios.post('http://127.0.0.1:5000/api/givePoints', data)
             .then(res => {
                 console.log("Respose: " + res);
