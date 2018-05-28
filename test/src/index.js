@@ -9,11 +9,11 @@ function rect(ctx, x,y,width, height) {
     ctx.fillRect(x, y, width, height);
 }
 
-function drawFractalTree(context, depth, size){
-    drawTree(context, size/2, size, -90, depth, depth);
+function drawFractalTree(context, depth){
+    drawTree(context, depth*60, depth*80, -90, depth, depth);
 }
 function drawTree(context, x1, y1, angle, depth, maxDepth){
-    var BRANCH_LENGTH = random(0, 5);
+    var BRANCH_LENGTH = random(0, 15);
     if (depth > 0){
         var x2 = x1 + (cos(angle) * depth * BRANCH_LENGTH);
         var y2 = y1 + (sin(angle) * depth * BRANCH_LENGTH);
@@ -71,12 +71,12 @@ class Tree extends React.Component{
         context.clearRect(0,0, 300, 300);
 
         //rect(context, 10, 10, 50 ,50);
-        drawFractalTree(context,this.props.depth, this.props.depth*20);
+        drawFractalTree(context,this.props.depth);
     }
 
     render(){
         return(
-            <canvas ref="canvas" width={this.props.depth*20} height={this.props.depth*20}/>
+            <canvas ref="canvas" width={this.props.depth*80} height={this.props.depth*80}/>
         )
     }
 }
@@ -129,30 +129,52 @@ class Register extends React.Component{
         var eq = null;
         var loc = null;
 
-        if(this.state.password !== this.state.confirmPassword && this.state.type!== null && this.state.type!=="None")
+        if(this.state.password !== this.state.confirmPassword)
             eq = "The two paswords do not match";
 
         if(this.state.type === "Giver")
-            loc = <input type="text" placeholder="location" onChange= {(event) => this.setState({location: event.target.value})} onKeyPress={this._handleKeyPress} />;
+            loc = <div className="inline form-group">
+                    <label htmlFor="location">Location</label>
+                <input type="text" placeholder="somewhere" onChange= {(event) => this.setState({location: event.target.value})} onKeyPress={this._handleKeyPress} />
+                </div>;
+
+
 
         return(
             <div>
                 <div>
-                    <input type="text" placeholder="username" onChange= {(event) => this.setState({username: event.target.value})} onKeyPress={this._handleKeyPress} />
-                    <input type="text" placeholder="snumber" onChange= {(event) => this.setState({snumber: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <div className="inline form-group">
+                        <label htmlFor="username">Username</label>
+                        <input type="text" placeholder="example97" onChange= {(event) => this.setState({username: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    </div>
+                    <div className="inline form-group">
+                        <label htmlFor="snumber">Student Number</label>
+                        <input type="text" placeholder="s1234567" onChange= {(event) => this.setState({snumber: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    </div>
 
-                    <select onChange= {(event) => this.setState({type: event.target.value, location:null})}>
-                        <option value="None"> </option>
-                        <option value="Receiver">Receiver</option>
-                        <option value="Giver">Giver</option>
-                    </select>
+                    <div className="block form-group">
+                        <label htmlFor="select">Type</label>
+                        <select onChange= {(event) => this.setState({type: event.target.value, location:null})}>
+                            <option value="None"> </option>
+                            <option value="Receiver">Receiver</option>
+                            <option value="Giver">Giver</option>
+                        </select>
+                    </div>
 
-                    <input type="text" placeholder="password" onChange= {(event) => this.setState({password: event.target.value})} onKeyPress={this._handleKeyPress} />
-                    <input type="text" placeholder="confirm password" onChange= {(event) => this.setState({confirmPassword: event.target.value})} onKeyPress={this._handleKeyPress} />
+
+                    <div className="inline form-group">
+                        <label htmlFor="password">Password</label>
+                        <input type="text" placeholder="password" onChange= {(event) => this.setState({password: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    </div>
+                    <div className="inline form-group">
+                        <label htmlFor="confpass">Confirm Password</label>
+                        <input type="text" placeholder="confirm password" onChange= {(event) => this.setState({confirmPassword: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    </div>
 
                     {loc}
 
-                    <button name="submit" onClick={() => {this.submit()}}> Submit </button>
+                    <br/><br/>
+                    <button class="action" name="submit" onClick={() => {this.submit()}}> Submit </button>
                 </div>
                 <div>
                     {eq}
@@ -200,28 +222,32 @@ class Post extends React.Component {
         if(this.state.empty) {
             if (this.state.selected) {
                 text = <div>
-                    <input type="text" onChange={(event) => {this.setState({text: event.target.value})}} placeholder="username" />
+                    <div className="inline form-group">
+                        <textarea onChange={(event) => {this.setState({text: event.target.value})}} />
+                    </div>
 
-                    <button name="Submit" onClick={this.submit()}> Submit</button>
+                    <br/>
+
+                    <button class="action" name="Submit" onClick={this.submit()}> Submit</button>
                     <button name="Close" onClick={() => this.setState({selected: !this.state.selected, text:-1})}> Close</button>
                 </div>;
             } else {
                 text = <div onClick={this.handleClick}> click here to write this</div>
             }
         }else{
-            text = <div className="postBody">
+            text = <div>
                 {this.props.body}
             </div>
         }
 
         return (
-            <div className="post">
-                {text}
-                <div className="postLocation">
-                    {this.props.location}
+            <div className="card">
+                <div className="postBody">
+                    {text}
                 </div>
-                <div className="postPrice">
-                    {this.props.price}
+                <div className="container">
+                    <h4>From: <b>{this.props.location}</b></h4>
+                    <h2><p>Total points: {this.props.price}</p></h2>
                 </div>
             </div>
         );
@@ -319,8 +345,8 @@ class ProfileAccessGiver extends React.Component{
                     You are a Giver
                 </div>
                 <div>
-                    <input type="text" onChange= {(event) => this.setState({username: event.target.value})} onKeyPress={this._handleKeyPress} />
-                    <input type="text" onChange= {(event) => this.setState({points: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <input type="text" placeholder="username" onChange= {(event) => this.setState({username: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <input type="text" placeholder="points" onChange= {(event) => this.setState({points: event.target.value})} onKeyPress={this._handleKeyPress} />
 
                     <button name="Submit" onClick={() => {this.submit()}}> Submit </button>
                     {this.state.result}
@@ -388,15 +414,23 @@ class ProfileAccessReceiver extends React.Component{
 
         return(
             <div>
-                You are a Receiver. You have {this.state.points} points
-                {tree}
+                <br/>
+                <div className="cardPoints">
+                    <h2>You are a Receiver. You have <font color="blue">{this.state.points}</font> points</h2>
+                </div>
+                <br/><br/>
                 <div className = "entire">
                     <div className = "ft-left">
+                        <h2>Posted</h2>
                         <Feed className="ft-left" posts = {this.state.pubfeeds} />
                     </div>
                     <div className="ft-right">
+                        <h2> To poste</h2>
                         <Feed className="ft-right" posts = {this.state.unpubfeeds} />
                     </div>
+                </div>
+                <div className="stuck">
+                    {tree}
                 </div>
             </div>
         )
@@ -586,10 +620,16 @@ class Main extends React.Component{
 
         return(
             <div>
-                <button name="home" onClick={() => this.buttonEvent("Home")}>Home</button>
-                <button name="profile" onClick={() => this.buttonEvent("Profile")}>Profile</button> |
-                <button name="register" onClick={() => this.buttonEvent("Register")}>Register</button>
-                <button name="logout" onClick={() => this.logOut()}>Log Out</button>
+                <div class="navbar">
+                    <div style={{float: "left"}}>
+                        <button class="action" name="home" onClick={() => this.buttonEvent("Home")}>Home</button>
+                        <button class="action" name="profile" onClick={() => this.buttonEvent("Profile")}>Profile</button>
+                    </div>
+                    <div style={{float: "right"}}>
+                        <button name="register" onClick={() => this.buttonEvent("Register")}>Register</button>
+                        <button name="logout" onClick={() => this.logOut()}>Log Out</button>
+                    </div>
+                </div>
 
                 <div>{this.state.response}</div>
 
@@ -602,6 +642,6 @@ class Main extends React.Component{
 // ========================================
 
 ReactDOM.render(
-    <Main />,
+    <div><link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css"/><Main /></div>,
     document.getElementById('root')
 );

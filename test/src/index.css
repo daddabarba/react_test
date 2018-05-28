@@ -7,10 +7,54 @@ ol, ul {
     padding-left: 30px;
 }
 
+body{
+    padding: 3px;
+    background-color: #d8d9da;
+}
+
+.navbar {
+    overflow: hidden;
+    background-color: #333;
+    font-family: Arial;
+    padding: 6px;
+}
+
 .board-row:after {
     clear: both;
     content: "";
     display: table;
+}
+
+.stuck {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    z-index: -1;
+}
+
+.cardPoints {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    background-color: #9ab6b9;
+    padding: 3px;
+}
+
+.card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    background-color: #9ab69a;
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    background-color: #9ad59b;
+}
+
+/* Add some padding inside the card container */
+.container {
+    padding: 2px 16px;
 }
 
 .status {
@@ -23,7 +67,6 @@ ol, ul {
 
 .ft-right{
     float: right;
-    margin-left: 50px;
 }
 
 .entire {
@@ -82,7 +125,7 @@ ol, ul {
 
 
 .postBody{
-    background: #0091ff;
+    background: #d8d9da;
     border: 0;
     float: left;
     font-size: 24px;
