@@ -113,6 +113,7 @@ class Post extends React.Component {
             .then(res => {
                 console.log("Respose: " + res);
                 this.setState({result: res.data});
+                //window.location.reload()
             })
             .catch(err => {console.log( err.toString())});
     };
