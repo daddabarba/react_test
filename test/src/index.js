@@ -5,6 +5,72 @@ import './index.css';
 import axios from 'axios';
 var querystring = require('querystring');
 
+class Register extends React.Component{
+    constructor(props){
+        super(props)
+
+        this.state = {
+            username: null,
+            snumber: null,
+            password: null,
+            confirmPassword: null,
+            type:null,
+            result: null
+        };
+
+        this.submit = this.submit.bind(this);
+    }
+
+    _handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            this.submit();
+        }
+    };
+
+    submit() {
+        if (this.state.password === this.state.confirmPassword)
+            this.sendCredentials();
+    }
+
+
+    sendCredentials = () => {
+
+        var data = {username: this.state.username, snumber: this.state.snumber, type: this.state.type, password: this.state.password};
+        axios.post('http://127.0.0.1:5000/api/addUser', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.setState({result: res.data});
+            })
+            .catch(err => {console.log( err.toString())});
+    };
+
+    render(){
+        var eq = null;
+        if(this.state.password !== this.state.confirmPassword)
+            eq = "The two paswords do not match";
+
+        return(
+            <div>
+                <div>
+                    <input type="text" onChange= {(event) => this.setState({username: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <input type="text" onChange= {(event) => this.setState({snumber: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <input type="text" onChange= {(event) => this.setState({type: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <input type="text" onChange= {(event) => this.setState({password: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <input type="text" onChange= {(event) => this.setState({confirmPassword: event.target.value})} onKeyPress={this._handleKeyPress} />
+
+                    <button name="submit" onClick={() => {this.submit()}}> Submit </button>
+                </div>
+                <div>
+                    {eq}
+                </div>
+                <div>
+                    {this.state.result}
+                </div>
+            </div>
+        );
+    }
+}
+
 class Post extends React.Component {
     constructor(props) {
         super(props);
@@ -76,8 +142,6 @@ class ProfileLogin extends React.Component{
     }
 
     render(){
-        var posts = [];
-
         return(
             <div>
                 <input type="text" onChange= {(event) => this.setState({inputName: event.target.value})} onKeyPress={this._handleKeyPress} />
@@ -161,6 +225,10 @@ class ProfileAccessReceiver extends React.Component{
 class ProfileAccess extends React.Component{
     constructor(props){
         super(props);
+
+        this.state = {
+            allowed: false
+        }
     }
 
     componentDidMount(){
@@ -178,6 +246,17 @@ class ProfileAccess extends React.Component{
             .catch(err => {console.log( err.toString())});
     };
 
+    getConfirmation = () => {
+
+        var data = {_id: this.props.callback.getUID()};
+        axios.post('http://127.0.0.1:5000/api/getConfirmation', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.setState({allowed: res.data});
+            })
+            .catch(err => {console.log( err.toString())});
+    };
+
     getPage(){
         if(this.props.callback.getUType() === "Giver")
             return <ProfileAccessGiver callback={this.props.callback} />;
@@ -187,6 +266,10 @@ class ProfileAccess extends React.Component{
 
     render(){
         var page = this.getPage();
+        this.getConfirmation();
+
+        if(!this.state.allowed)
+            page = <div> You need to be verified first </div>;
 
         return(
             <div>
@@ -305,8 +388,8 @@ class Main extends React.Component{
     getPage(){
         if(this.state.selection == "Home")
             return <Home/>;
-        if(this.state.selection == "Feed")
-            return <Feed/>;
+        if(this.state.selection == "Register")
+            return <Register/>;
         if(this.state.selection == "Profile")
             return <Profile callback = {{setUID: this.setUserID, getUID: this.getUserID, logout: this.logout, setUType: this.setUType, getUType: this.getUType}}/>;
     }
@@ -322,7 +405,8 @@ class Main extends React.Component{
         return(
             <div>
                 <button name="home" onClick={() => this.buttonEvent("Home")}>Home</button>
-                <button name="profile" onClick={() => this.buttonEvent("Profile")}>Profile</button>
+                <button name="profile" onClick={() => this.buttonEvent("Profile")}>Profile</button> |
+                <button name="register" onClick={() => this.buttonEvent("Register")}>Register</button>
                 <button name="logout" onClick={() => this.logOut()}>Log Out</button>
 
                 <div>{this.state.response}</div>

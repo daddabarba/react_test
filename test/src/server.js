@@ -126,6 +126,38 @@ app.post('/api/getUType', jsonParse, (req, res) => {
 
 });
 
+app.post('/api/getConfirmation', jsonParse, (req, res) => {
+    console.log('Sending Response for type request');
+    console.log('Searching id: ' + req.body._id );
+
+    dataBase.db.collection("users").findOne({_id: ObjectId(req.body._id)}).then(
+        function(value){
+            console.log("returning " + value.confirmation);
+            res.send(value.confirmation);
+        }
+
+    ).catch(
+        function () {
+            res.send({userID: null});
+        }
+    );
+
+});
+
+app.post('/api/addUser', jsonParse, (req, res) => {
+    console.log('Sending Response for login request');
+    console.log('Searching user: ' + req.body.username + " with password " + req.body.password);
+
+    var confirmed = req.body.type === "Receiver";
+    var data = req.body;
+
+    data.confirmation = confirmed;
+
+    dataBase.db.collection("users").insert(data);
+    res.send("Success");
+
+});
+
 app.post('/api/login', jsonParse, (req, res) => {
     console.log('Sending Response for login request');
     console.log('Searching user: ' + req.body.username + " with password " + req.body.password);
