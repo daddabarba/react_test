@@ -274,7 +274,7 @@ class ProfileAccessReceiver extends React.Component{
         axios.post('http://127.0.0.1:5000/api/getPubFeeds', data)
             .then(res => {
                 console.log("Respose: " + res);
-                this.setState({pubfeeds: res.data});
+                this.setState({pubfeeds: res.data.reverse()});
             })
             .catch(err => {console.log( err.toString())});
     };
@@ -285,7 +285,7 @@ class ProfileAccessReceiver extends React.Component{
         axios.post('http://127.0.0.1:5000/api/getUnpubFeeds', data)
             .then(res => {
                 console.log("Respose: " + res);
-                this.setState({unpubfeeds: res.data});
+                this.setState({unpubfeeds: res.data.reverse()});
             })
             .catch(err => {console.log( err.toString())});
     };
