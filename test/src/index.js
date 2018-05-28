@@ -46,7 +46,7 @@ class Register extends React.Component{
 
     render(){
         var eq = null;
-        if(this.state.password !== this.state.confirmPassword)
+        if(this.state.password !== this.state.confirmPassword && this.state.type!== null && this.state.type!=="None")
             eq = "The two paswords do not match";
 
         return(
@@ -54,7 +54,13 @@ class Register extends React.Component{
                 <div>
                     <input type="text" placeholder="username" onChange= {(event) => this.setState({username: event.target.value})} onKeyPress={this._handleKeyPress} />
                     <input type="text" placeholder="snumber" onChange= {(event) => this.setState({snumber: event.target.value})} onKeyPress={this._handleKeyPress} />
-                    <input type="text" placeholder="type" onChange= {(event) => this.setState({type: event.target.value})} onKeyPress={this._handleKeyPress} />
+
+                    <select onChange= {(event) => this.setState({type: event.target.value})}>
+                        <option value="None"> </option>
+                        <option value="Receiver">Receiver</option>
+                        <option value="Giver">Giver</option>
+                    </select>
+
                     <input type="text" placeholder="password" onChange= {(event) => this.setState({password: event.target.value})} onKeyPress={this._handleKeyPress} />
                     <input type="text" placeholder="confirm password" onChange= {(event) => this.setState({confirmPassword: event.target.value})} onKeyPress={this._handleKeyPress} />
 
