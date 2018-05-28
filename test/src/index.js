@@ -142,6 +142,7 @@ class Register extends React.Component{
 
         return(
             <div>
+                <br/><br/>
                 <div>
                     <div className="inline form-group">
                         <label htmlFor="username">Username</label>
@@ -173,11 +174,13 @@ class Register extends React.Component{
 
                     {loc}
 
+                    <div>
+                        {eq}
+                    </div>
+
+
                     <br/><br/>
                     <button class="action" name="submit" onClick={() => {this.submit()}}> Submit </button>
-                </div>
-                <div>
-                    {eq}
                 </div>
                 <div>
                     {this.state.result}
@@ -301,10 +304,19 @@ class ProfileLogin extends React.Component{
     render(){
         return(
             <div>
-                <input type="text" placeholder="username" onChange= {(event) => this.setState({inputName: event.target.value})} onKeyPress={this._handleKeyPress} />
-                <input type="text" placeholder="password" onChange= {(event) => this.setState({inputPass: event.target.value})} onKeyPress={this._handleKeyPress} />
+                <br/><br/>
+                <div className="inline form-group">
+                    <label htmlFor="usernameLogin">Username</label>
+                    <input type="text" placeholder="username" onChange= {(event) => this.setState({inputName: event.target.value})} onKeyPress={this._handleKeyPress} />
+                </div>
+                <div className="inline form-group">
+                    <label htmlFor="passwordLogin">Password</label>
+                    <input type="text" placeholder="password" onChange= {(event) => this.setState({inputPass: event.target.value})} onKeyPress={this._handleKeyPress} />
+                </div>
 
-                <button name="Log In" onClick={() => {this.log()}}> Log In </button>
+                <br/><br/>
+
+                <button class="action" name="Log In" onClick={() => {this.log()}}> Log In </button>
             </div>
         );
     }
@@ -341,14 +353,24 @@ class ProfileAccessGiver extends React.Component{
     render(){
         return(
             <div>
-                <div>
-                    You are a Giver
+                <br/>
+                <div className="cardPoints">
+                    <h2>You are a Giver</h2>
                 </div>
+                <br/><br/>
                 <div>
-                    <input type="text" placeholder="username" onChange= {(event) => this.setState({username: event.target.value})} onKeyPress={this._handleKeyPress} />
-                    <input type="text" placeholder="points" onChange= {(event) => this.setState({points: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <div className="inline form-group">
+                        <label htmlFor="receiver">Receiver</label>
+                        <input type="text" placeholder="username" onChange= {(event) => this.setState({username: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    </div>
+                    <div className="inline form-group">
+                        <label htmlFor="points">Amount of points</label>
+                        <input type="text" placeholder="points" onChange= {(event) => this.setState({points: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    </div>
 
-                    <button name="Submit" onClick={() => {this.submit()}}> Submit </button>
+                    <br/><br/>
+
+                    <button class="action" name="Submit" onClick={() => {this.submit()}}> Submit </button>
                     {this.state.result}
                 </div>
             </div>
@@ -425,7 +447,7 @@ class ProfileAccessReceiver extends React.Component{
                         <Feed className="ft-left" posts = {this.state.pubfeeds} />
                     </div>
                     <div className="ft-right">
-                        <h2> To poste</h2>
+                        <h2> To post</h2>
                         <Feed className="ft-right" posts = {this.state.unpubfeeds} />
                     </div>
                 </div>
@@ -485,7 +507,7 @@ class ProfileAccess extends React.Component{
         var page = this.getPage();
 
         if(!this.state.allowed)
-            page = <div> You need to be verified first </div>;
+            page = <div className="cardPoints"> <h1> You need to be verified first</h1> </div>;
 
         return(
             <div>
