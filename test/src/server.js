@@ -102,7 +102,7 @@ app.post('/api/getPubFeeds', jsonParse, (req, res) => {
 
     ).catch(
         function () {
-            res.send({userID: null});
+            res.send(null);
         }
     );
 
@@ -120,14 +120,31 @@ app.post('/api/getUType', jsonParse, (req, res) => {
 
     ).catch(
         function () {
-            res.send({userID: null});
+            res.send(null);
+        }
+    );
+
+});
+
+app.post('/api/getPoints', jsonParse, (req, res) => {
+    console.log('Sending Response for points request');
+    console.log('Searching id: ' + req.body._id );
+
+    dataBase.db.collection("users").findOne({_id: ObjectId(req.body._id)}).then(
+        function(value){
+            res.send({points: value.points});
+        }
+
+    ).catch(
+        function () {
+            res.send(null);
         }
     );
 
 });
 
 app.post('/api/getConfirmation', jsonParse, (req, res) => {
-    console.log('Sending Response for type request');
+    console.log('Sending Response for confirmation request');
     console.log('Searching id: ' + req.body._id );
 
     dataBase.db.collection("users").findOne({_id: ObjectId(req.body._id)}).then(
@@ -138,7 +155,33 @@ app.post('/api/getConfirmation', jsonParse, (req, res) => {
 
     ).catch(
         function () {
-            res.send({userID: null});
+            res.send(null);
+        }
+    );
+
+});
+
+app.post('/api/givePoints', jsonParse, (req, res) => {
+    console.log('Sending Response for giving points request');
+    console.log('Searching id: ' + req.body.username + " to give " + req.body.points + " points");
+
+    var data = req.body;
+
+    dataBase.db.collection("users").findOne({username: req.body.username}).then(
+        function(value){
+            console.log("previous points " + value.points);
+            data.points = Number(value.points) + Number(data.points);
+            console.log("new points " + data.points);
+
+            data._id = value._id;
+
+            dataBase.db.collection("users").findOneAndUpdate({_id: ObjectId(data._id)}, {$set: {points: data.points}});
+            res.send("Success");
+        }
+
+    ).catch(
+        function () {
+            res.send(null);
         }
     );
 
@@ -152,6 +195,7 @@ app.post('/api/addUser', jsonParse, (req, res) => {
     var data = req.body;
 
     data.confirmation = confirmed;
+    data.points = 0;
 
     dataBase.db.collection("users").insert(data);
     res.send("Success");

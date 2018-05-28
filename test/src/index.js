@@ -124,10 +124,6 @@ class ProfileLogin extends React.Component{
     constructor(props){
         super(props);
 
-        this.state = {
-            stuff: null
-        };
-
         this.log = this.log.bind(this);
     }
 
@@ -148,7 +144,6 @@ class ProfileLogin extends React.Component{
                 <input type="text" onChange= {(event) => this.setState({inputPass: event.target.value})} onKeyPress={this._handleKeyPress} />
 
                 <button name="Log In" onClick={() => {this.log()}}> Log In </button>
-                {this.state.stuff}
             </div>
         );
     }
@@ -157,12 +152,44 @@ class ProfileLogin extends React.Component{
 class ProfileAccessGiver extends React.Component{
     constructor(props){
         super(props);
+
+        this.state = {
+            username: null,
+            points: null,
+            result: null
+        };
     }
+
+    _handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            this.submit();
+        }
+    };
+
+    submit = () => {
+
+        var data = {username: this.state.username, points: this.state.points};
+        axios.post('http://127.0.0.1:5000/api/givePoints', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.setState({result: res.data});
+            })
+            .catch(err => {console.log( err.toString())});
+    };
 
     render(){
         return(
             <div>
-               You are a Giver
+                <div>
+                    You are a Giver
+                </div>
+                <div>
+                    <input type="text" onChange= {(event) => this.setState({username: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <input type="text" onChange= {(event) => this.setState({points: event.target.value})} onKeyPress={this._handleKeyPress} />
+
+                    <button name="Submit" onClick={() => {this.submit()}}> Submit </button>
+                    {this.state.result}
+                </div>
             </div>
         )
     }
@@ -174,11 +201,13 @@ class ProfileAccessReceiver extends React.Component{
 
         this.state = {
             pubfeeds: [],
-            unpubfeeds: []
-        }
+            unpubfeeds: [],
+            points: -1
+        };
 
         this.getPubFeeds();
         this.getUnpubFeeds();
+        this.getPoints();
     }
 
     getPubFeeds = () => {
@@ -203,12 +232,23 @@ class ProfileAccessReceiver extends React.Component{
             .catch(err => {console.log( err.toString())});
     };
 
+    getPoints = () => {
+
+        var data = {_id: this.props.callback.getUID()};
+        axios.post('http://127.0.0.1:5000/api/getPoints', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.setState({points: res.data.points});
+            })
+            .catch(err => {console.log( err.toString())});
+    };
+
 
     render(){
 
         return(
             <div>
-                You are a Receiver
+                You are a Receiver. You have {this.state.points} points
                 <div className = "entire">
                     <div className = "ft-left">
                         <Feed className="ft-left" posts = {this.state.pubfeeds} />
@@ -228,7 +268,9 @@ class ProfileAccess extends React.Component{
 
         this.state = {
             allowed: false
-        }
+        };
+
+        this.getConfirmation();
     }
 
     componentDidMount(){
@@ -266,7 +308,6 @@ class ProfileAccess extends React.Component{
 
     render(){
         var page = this.getPage();
-        this.getConfirmation();
 
         if(!this.state.allowed)
             page = <div> You need to be verified first </div>;
