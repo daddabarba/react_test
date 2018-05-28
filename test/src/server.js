@@ -161,6 +161,16 @@ app.post('/api/getConfirmation', jsonParse, (req, res) => {
 
 });
 
+
+app.post('/api/writePost', jsonParse, (req, res) => {
+    console.log('Sending Response for writing post request');
+    console.log('Searching id: ' + req.body._id );
+
+    dataBase.db.collection("feeds").findOneAndUpdate({_id: ObjectId(req.body._id)}, {$set: {body: req.body.body}});
+    res.send("Success");
+
+});
+
 app.post('/api/givePoints', jsonParse, (req, res) => {
     console.log('Sending Response for giving points request');
     console.log('Searching id: ' + req.body.username + " to give " + req.body.points + " points. From " + req.body.me);

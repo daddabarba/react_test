@@ -92,14 +92,54 @@ class Register extends React.Component{
 class Post extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            empty: this.props.body === -1,
+            selected: false,
+            text: -1,
+            result: null
+        };
     }
 
+    handleClick = () => {
+      if(this.state.empty)
+          this.setState({selected: !this.state.selected});
+    };
+
+    submit = () => {
+
+        var data = {_id: this.props.ID, body: this.state.text};
+        axios.post('http://127.0.0.1:5000/api/writePost', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.setState({result: res.data});
+            })
+            .catch(err => {console.log( err.toString())});
+    };
+
     render() {
+        var text = <div>  </div>;
+
+        if(this.state.empty) {
+            if (this.state.selected) {
+                text = <div>
+                    <input type="text" onChange={(event) => {this.setState({text: event.target.value})}} placeholder="username" />
+
+                    <button name="Submit" onClick={this.submit()}> Submit</button>
+                    <button name="Close" onClick={() => this.setState({selected: !this.state.selected, text:-1})}> Close</button>
+                </div>;
+            } else {
+                text = <div onClick={this.handleClick}> click here to write this</div>
+            }
+        }else{
+            text = <div className="postBody">
+                {this.props.body}
+            </div>
+        }
+
         return (
             <div className="post">
-                <div className="postBody">
-                    {this.props.body}
-                </div>
+                {text}
                 <div className="postLocation">
                     {this.props.location}
                 </div>
@@ -119,7 +159,7 @@ class Feed extends React.Component {
     renderPost(i){
         const post = this.props.posts[i];
         return(
-            <Post body={post.body} location={post.location} price={post.points}/>
+            <Post body={post.body} location={post.location} price={post.points} ID={post._id}/>
         );
     }
 
