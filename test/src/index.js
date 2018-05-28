@@ -15,6 +15,7 @@ class Register extends React.Component{
             password: null,
             confirmPassword: null,
             type:null,
+            location:null,
             result: null
         };
 
@@ -36,6 +37,10 @@ class Register extends React.Component{
     sendCredentials = () => {
 
         var data = {username: this.state.username, snumber: this.state.snumber, type: this.state.type, password: this.state.password};
+
+        if(this.state.location)
+            data.location = this.state.location;
+
         axios.post('http://127.0.0.1:5000/api/addUser', data)
             .then(res => {
                 console.log("Respose: " + res);
@@ -46,8 +51,13 @@ class Register extends React.Component{
 
     render(){
         var eq = null;
+        var loc = null;
+
         if(this.state.password !== this.state.confirmPassword && this.state.type!== null && this.state.type!=="None")
             eq = "The two paswords do not match";
+
+        if(this.state.type === "Giver")
+            loc = <input type="text" placeholder="location" onChange= {(event) => this.setState({location: event.target.value})} onKeyPress={this._handleKeyPress} />;
 
         return(
             <div>
@@ -55,7 +65,7 @@ class Register extends React.Component{
                     <input type="text" placeholder="username" onChange= {(event) => this.setState({username: event.target.value})} onKeyPress={this._handleKeyPress} />
                     <input type="text" placeholder="snumber" onChange= {(event) => this.setState({snumber: event.target.value})} onKeyPress={this._handleKeyPress} />
 
-                    <select onChange= {(event) => this.setState({type: event.target.value})}>
+                    <select onChange= {(event) => this.setState({type: event.target.value, location:null})}>
                         <option value="None"> </option>
                         <option value="Receiver">Receiver</option>
                         <option value="Giver">Giver</option>
@@ -63,6 +73,8 @@ class Register extends React.Component{
 
                     <input type="text" placeholder="password" onChange= {(event) => this.setState({password: event.target.value})} onKeyPress={this._handleKeyPress} />
                     <input type="text" placeholder="confirm password" onChange= {(event) => this.setState({confirmPassword: event.target.value})} onKeyPress={this._handleKeyPress} />
+
+                    {loc}
 
                     <button name="submit" onClick={() => {this.submit()}}> Submit </button>
                 </div>
