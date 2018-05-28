@@ -52,11 +52,11 @@ class Register extends React.Component{
         return(
             <div>
                 <div>
-                    <input type="text" onChange= {(event) => this.setState({username: event.target.value})} onKeyPress={this._handleKeyPress} />
-                    <input type="text" onChange= {(event) => this.setState({snumber: event.target.value})} onKeyPress={this._handleKeyPress} />
-                    <input type="text" onChange= {(event) => this.setState({type: event.target.value})} onKeyPress={this._handleKeyPress} />
-                    <input type="text" onChange= {(event) => this.setState({password: event.target.value})} onKeyPress={this._handleKeyPress} />
-                    <input type="text" onChange= {(event) => this.setState({confirmPassword: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <input type="text" placeholder="username" onChange= {(event) => this.setState({username: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <input type="text" placeholder="snumber" onChange= {(event) => this.setState({snumber: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <input type="text" placeholder="type" onChange= {(event) => this.setState({type: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <input type="text" placeholder="password" onChange= {(event) => this.setState({password: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <input type="text" placeholder="confirm password" onChange= {(event) => this.setState({confirmPassword: event.target.value})} onKeyPress={this._handleKeyPress} />
 
                     <button name="submit" onClick={() => {this.submit()}}> Submit </button>
                 </div>
@@ -140,8 +140,8 @@ class ProfileLogin extends React.Component{
     render(){
         return(
             <div>
-                <input type="text" onChange= {(event) => this.setState({inputName: event.target.value})} onKeyPress={this._handleKeyPress} />
-                <input type="text" onChange= {(event) => this.setState({inputPass: event.target.value})} onKeyPress={this._handleKeyPress} />
+                <input type="text" placeholder="username" onChange= {(event) => this.setState({inputName: event.target.value})} onKeyPress={this._handleKeyPress} />
+                <input type="text" placeholder="password" onChange= {(event) => this.setState({inputPass: event.target.value})} onKeyPress={this._handleKeyPress} />
 
                 <button name="Log In" onClick={() => {this.log()}}> Log In </button>
             </div>
