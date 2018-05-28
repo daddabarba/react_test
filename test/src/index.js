@@ -9,26 +9,28 @@ function rect(ctx, x,y,width, height) {
     ctx.fillRect(x, y, width, height);
 }
 
-function drawFractalTree(context){
-    drawTree(context, 0, 0, 0, 11);
+function drawFractalTree(context, depth, size){
+    drawTree(context, size/2, size, -90, depth, depth);
 }
-function drawTree(context, x1, y1, angle, depth){
-    var BRANCH_LENGTH = random(0, 20);
+function drawTree(context, x1, y1, angle, depth, maxDepth){
+    var BRANCH_LENGTH = random(0, 5);
     if (depth != 0){
         var x2 = x1 + (cos(angle) * depth * BRANCH_LENGTH);
         var y2 = y1 + (sin(angle) * depth * BRANCH_LENGTH);
 
-        drawLine(context, x1, y1, x2, y2, depth);
-        drawTree(context, x2, y2, angle - random(15,20), depth - 1);
-        drawTree(context, x2, y2, angle + random(15,20), depth - 1);
+        drawLine(context, x1, y1, x2, y2, 11*(depth/maxDepth), maxDepth);
+        drawTree(context, x2, y2, angle - random(15,20), depth - 1, maxDepth);
+        drawTree(context, x2, y2, angle + random(15,20), depth - 1, maxDepth);
     }
 }
-function drawLine(context, x1, y1, x2, y2, thickness){
+function drawLine(context, x1, y1, x2, y2, thickness, maxDepth){
     context.fillStyle   = '#000';
-    if(thickness > 6)
-        context.strokeStyle = 'rgb(139,126, 102)'; //Brown
-    else
-        context.strokeStyle = 'rgb(34,139,34)'; //Green
+
+    var r = 34 + (thickness/maxDepth)*105;
+    var g = 139 - (thickness/maxDepth)*13;
+    var b = 34 + (thickness/maxDepth)*68;
+
+    context.strokeStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
     context.lineWidth = thickness * 1.5;
     context.beginPath();
     context.moveTo(x1,y1);
@@ -69,12 +71,12 @@ class Tree extends React.Component{
         context.clearRect(0,0, 300, 300);
 
         //rect(context, 10, 10, 50 ,50);
-        drawFractalTree(context);
+        drawFractalTree(context,this.props.depth, this.props.depth*20);
     }
 
     render(){
         return(
-            <canvas ref="canvas" width={300} height={300}/>
+            <canvas ref="canvas" width={this.props.depth*20} height={this.props.depth*20}/>
         )
     }
 }
@@ -379,9 +381,15 @@ class ProfileAccessReceiver extends React.Component{
 
     render(){
 
+        var tree = null;
+
+        if(this.state.points > 0)
+            tree = <Tree depth={this.state.points} />;
+
         return(
             <div>
                 You are a Receiver. You have {this.state.points} points
+                {tree}
                 <div className = "entire">
                     <div className = "ft-left">
                         <Feed className="ft-left" posts = {this.state.pubfeeds} />
@@ -496,7 +504,6 @@ class Home extends React.Component{
         return(
             <div>
                 Hello This is the Home
-                <Tree/>
             </div>
         );
     }
