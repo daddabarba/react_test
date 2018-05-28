@@ -177,7 +177,7 @@ app.post('/api/givePoints', jsonParse, (req, res) => {
 
     var data = req.body;
 
-    dataBase.db.collection("users").findOne({username: req.body.username}).then(
+    dataBase.db.collection("users").findOne({$or:[{username: req.body.username}, {snumber: req.body.username}]}).then(
         function(value){
             console.log("previous points " + value.points);
             var givenPoints = data.points;
@@ -229,7 +229,7 @@ app.post('/api/login', jsonParse, (req, res) => {
     console.log('Sending Response for login request');
     console.log('Searching user: ' + req.body.username + " with password " + req.body.password);
 
-    dataBase.db.collection("users").findOne(req.body).then(
+    dataBase.db.collection("users").findOne({$and:[{$or:[{username:req.body.username}, {snumber:req.body.username}]}, {password: req.body.password}]}).then(
         function(value){
 
             res.send({userID: value._id});
