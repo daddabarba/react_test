@@ -130,7 +130,7 @@ app.post('/api/getAllFeeds', jsonParse, (req, res) => {
 app.post('/api/getAllRanking', jsonParse, (req, res) => {
     console.log('Sending Response for users ranking request');
 
-    dataBase.db.collection("users").find({}).sort({points: -1}).toArray().then(
+    dataBase.db.collection("users").find({},{username: 1, snumber:1, points: 1}).sort({points: -1}).toArray().then(
         function(value){
             res.send(value);
         }
