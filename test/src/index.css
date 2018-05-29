@@ -61,12 +61,18 @@ body{
     margin-bottom: 10px;
 }
 
+.map{
+    right: 4%;
+    position: fixed;
+}
+
 .ft-left{
     float: left;
 }
 
 .ft-center{
     margin-left: 20%;
+    width:15%;
     float: left;
 }
 

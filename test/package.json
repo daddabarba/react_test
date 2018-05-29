@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:5000/",
   "dependencies": {
+    "google-maps-react": "^1.1.0",
     "axios": "^0.18.0",
     "express": "^4.16.2",
     "react": "^16.3.2",
@@ -20,6 +21,7 @@
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "devDependencies": {
-    "concurrently": "^3.5.0"
+    "concurrently": "^3.5.0",
+    "google-maps": "^3.2.1"
   }
 }

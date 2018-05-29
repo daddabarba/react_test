@@ -2,12 +2,26 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+import { GoogleApiWrapper } from 'google-maps-react'
+import MapContainer from './MapContainer'
+
 import axios from 'axios';
 var querystring = require('querystring');
 
-function rect(ctx, x,y,width, height) {
-    ctx.fillRect(x, y, width, height);
+class MapWrap extends React.Component {
+    render() {
+        return (
+            <div>
+                <br/><br/>
+                <MapContainer google={this.props.google} />
+            </div>
+        );
+    }
 }
+
+var MapWrapApi =  GoogleApiWrapper({
+    apiKey: 'AIzaSyBjjuoRYmf1graww4C-UfAlZ-mH0nX8jCE'
+})(MapWrap);
 
 function drawFractalTree(context, depth){
     drawTree(context, depth*60, depth*80, -90, depth, depth);
@@ -657,7 +671,10 @@ class Home extends React.Component{
             tree = <Tree depth={this.state.points} />;
 
         return(
-            <dib>
+            <div>
+                <div className="map">
+                    <MapWrapApi/>
+                </div>
                 <br/><br/>
                 <div className="ft-center">
                     {this.getPage()}
@@ -665,7 +682,7 @@ class Home extends React.Component{
                 <div className="stuck">
                     {tree}
                 </div>
-            </dib>
+            </div>
         );
     }
 }
@@ -724,7 +741,7 @@ class UsersRanking extends React.Component{
             tree = <Tree depth={this.state.points} />;
 
         return(
-            <dib>
+            <div>
                 <br/><br/>
                 <div className="ft-center">
                     {this.getPage()}
@@ -732,7 +749,7 @@ class UsersRanking extends React.Component{
                 <div className="stuck">
                     {tree}
                 </div>
-            </dib>
+            </div>
         );
     }
 }
