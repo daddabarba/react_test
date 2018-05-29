@@ -2,11 +2,33 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
 
+import axios from 'axios';
+
 export default class MapContainer extends Component {
 
+    constructor(props){
+        super(props);
+
+        this.state = {
+            locations: [{location: "Esdoornlaan 248 9741kj"}]
+        }
+    }
+
     componentDidUpdate() {
+        //this.getLocations();
         this.loadMap(); // call loadMap function to load the google map
     }
+
+    getLocations= () => {
+
+        var data = {};
+        axios.post('http://127.0.0.1:5000/api/getAllLocations', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.setState({locations: res.data});
+            })
+            .catch(err => {console.log( err.toString())});
+    };
 
     loadMap() {
         if (this.props && this.props.google) { // checks to make sure that props have been passed
@@ -24,6 +46,25 @@ export default class MapContainer extends Component {
 
             this.map = new maps.Map(node, mapConfig); // creates a new Google map on the specified node (ref='map') with the specified configuration set above.
 
+            var geocoder = new google.maps.Geocoder();
+
+            if(this.state.locations){
+                this.state.locations.forEach( location => { // iterate through locations saved in state
+                    geocoder.geocode({address: location.location}, function (results, status) {
+                        if (status === google.maps.GeocoderStatus.OK) {
+
+                            //In this case it creates a marker, but you can get the lat and lng from the location.LatLng
+                            var marker = new google.maps.Marker({
+                                map: this.map,
+                                position: results[0].geometry.location,
+                                title: location.location
+                            });
+                        } else {
+                            alert('Geocode was not successful for the following reason: ' + status);
+                        }
+                    });
+                })
+            }
         }
     }
 
