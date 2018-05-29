@@ -127,6 +127,23 @@ app.post('/api/getAllFeeds', jsonParse, (req, res) => {
 
 });
 
+app.post('/api/getAllRanking', jsonParse, (req, res) => {
+    console.log('Sending Response for users ranking request');
+
+    dataBase.db.collection("users").find({}).sort({points: -1}).toArray().then(
+        function(value){
+            res.send(value);
+        }
+
+    ).catch(
+        function () {
+            console.log("Failed");
+            res.send(null);
+        }
+    );
+
+});
+
 app.post('/api/getUType', jsonParse, (req, res) => {
     console.log('Sending Response for type request');
     console.log('Searching id: ' + req.body._id );

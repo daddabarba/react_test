@@ -289,6 +289,41 @@ class Feed extends React.Component {
     }
 }
 
+class Ranking extends React.Component{
+    constructor(props){
+        super(props);
+    }
+
+    renderUser(i){
+        const user = this.props.users[i];
+        return(
+            <div className="card">
+                <div className="postBody">
+                    {user.username}
+                </div>
+                <div className="container">
+                    <h4>Student number: <b>{user.snumber}</b></h4>
+                    <h2><p>Total points: {user.points}</p></h2>
+                </div>
+            </div>
+        );
+    }
+
+    render(){
+        var users = [];
+
+        for(var i=0; i<this.props.users.length; i++){
+            users.push(<div>{this.renderUser(i)}<br/></div>)
+        }
+
+        return(
+          <div>
+              {users}
+          </div>
+        );
+    }
+}
+
 class ProfileLogin extends React.Component{
     constructor(props){
         super(props);
@@ -635,6 +670,73 @@ class Home extends React.Component{
     }
 }
 
+class UsersRanking extends React.Component{
+    constructor(props){
+        super(props);
+
+        this.state = {
+            users: null,
+            points: null
+        };
+
+
+
+    }
+
+    componentDidMount(){
+        this.getPoints();
+        this.getRanking();
+    }
+
+    getPoints = () => {
+
+        var data = {_id: this.props.callback.getUID()};
+        axios.post('http://127.0.0.1:5000/api/getPoints', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.setState({points: res.data.points});
+            })
+            .catch(err => {console.log( err.toString())});
+    };
+
+
+    getRanking = () => {
+
+        var data = {_id: this.props.callback.getUID()};
+        axios.post('http://127.0.0.1:5000/api/getAllRanking', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.setState({users: res.data});
+            })
+            .catch(err => {console.log( err.toString())});
+    };
+
+    getPage(){
+        if(this.state.users != null)
+            return <Ranking users = {this.state.users}/>;
+        return <div> Loading... </div>
+    }
+
+    render(){
+        var tree = null;
+
+        if(this.state.points > 0)
+            tree = <Tree depth={this.state.points} />;
+
+        return(
+            <dib>
+                <br/><br/>
+                <div className="ft-center">
+                    {this.getPage()}
+                </div>
+                <div className="stuck">
+                    {tree}
+                </div>
+            </dib>
+        );
+    }
+}
+
 class Main extends React.Component{
     constructor(props){
         super(props);
@@ -707,6 +809,8 @@ class Main extends React.Component{
                 this.refs.Home.disabled = true;
             if(this.refs.Profile)
                 this.refs.Profile.disabled = false;
+            if(this.refs.Ranks)
+                this.refs.Ranks.disabled = false;
 
             return <Home callback={cbk}/>;
         }
@@ -718,8 +822,20 @@ class Main extends React.Component{
                 this.refs.Home.disabled = false;
             if(this.refs.Profile)
                 this.refs.Profile.disabled = true;
+            if(this.refs.Ranks)
+                this.refs.Ranks.disabled = false;
 
             return <Profile callback={cbk}/>;
+        }
+        if (this.state.selection == "Ranks"){
+            if(this.refs.Home)
+                this.refs.Home.disabled = false;
+            if(this.refs.Profile)
+                this.refs.Profile.disabled = false;
+            if(this.refs.Ranks)
+                this.refs.Ranks.disabled = true;
+
+            return <UsersRanking callback={cbk}/>;
         }
     }
 
@@ -737,6 +853,7 @@ class Main extends React.Component{
                     <div style={{float: "left"}}>
                         <button class="action" ref = "Home" name="home" onClick={() => this.buttonEvent("Home")}>Home</button>
                         <button class="action" ref = "Profile" name="profile" onClick={() => this.buttonEvent("Profile")}>Profile</button>
+                        <button class="action" ref="Ranks" name="ranks" onClick={() => this.buttonEvent("Ranks")}>Ranks</button>
                     </div>
                     <div style={{float: "right"}}>
                         <button name="register" onClick={() => this.buttonEvent("Register")}>Register</button>
