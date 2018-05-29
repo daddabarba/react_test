@@ -195,7 +195,7 @@ class Post extends React.Component {
         super(props);
 
         this.state = {
-            empty: this.props.body === -1,
+            empty: this.props.body === -1 || this.props.body === "" || this.props.body == null,
             selected: false,
             text: -1,
             result: null
@@ -208,6 +208,11 @@ class Post extends React.Component {
     };
 
     submit = () => {
+        if(this.state.text !== -1 && this.state.text!=="" && this.state.text!==null)
+            this.submitApi();
+    };
+
+    submitApi = () => {
 
         var data = {_id: this.props.ID, body: this.state.text, UID: this.props.UID};
         axios.post('http://127.0.0.1:5000/api/writePost', data)
