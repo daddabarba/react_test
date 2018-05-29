@@ -688,15 +688,34 @@ class Main extends React.Component{
         localStorage.setItem('UID', userID);
     }
 
-    getPage(){
-        var cbk = {setUID: this.setUserID, getUID: this.getUserID, logout: this.logout, setUType: this.setUType, getUType: this.getUType};
+    getPage() {
+        var cbk = {
+            setUID: this.setUserID,
+            getUID: this.getUserID,
+            logout: this.logout,
+            setUType: this.setUType,
+            getUType: this.getUType
+        };
 
-        if(this.state.selection == "Home")
-            return <Home callback = {cbk}/>;
-        if(this.state.selection == "Register")
+        if (this.state.selection == "Home") {
+            if(this.refs.Home)
+                this.refs.Home.disabled = true;
+            if(this.refs.Profile)
+                this.refs.Profile.disabled = false;
+
+            return <Home callback={cbk}/>;
+        }
+        if (this.state.selection == "Register") {
             return <Register/>;
-        if(this.state.selection == "Profile")
-            return <Profile callback = {cbk}/>;
+        }
+        if (this.state.selection == "Profile"){
+            if(this.refs.Home)
+                this.refs.Home.disabled = false;
+            if(this.refs.Profile)
+                this.refs.Profile.disabled = true;
+
+            return <Profile callback={cbk}/>;
+        }
     }
 
     buttonEvent(sel){
@@ -711,8 +730,8 @@ class Main extends React.Component{
             <div>
                 <div class="navbar">
                     <div style={{float: "left"}}>
-                        <button class="action" name="home" onClick={() => this.buttonEvent("Home")}>Home</button>
-                        <button class="action" name="profile" onClick={() => this.buttonEvent("Profile")}>Profile</button>
+                        <button class="action" ref = "Home" name="home" onClick={() => this.buttonEvent("Home")}>Home</button>
+                        <button class="action" ref = "Profile" name="profile" onClick={() => this.buttonEvent("Profile")}>Profile</button>
                     </div>
                     <div style={{float: "right"}}>
                         <button name="register" onClick={() => this.buttonEvent("Register")}>Register</button>
