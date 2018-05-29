@@ -209,7 +209,7 @@ class Post extends React.Component {
 
     submit = () => {
 
-        var data = {_id: this.props.ID, body: this.state.text};
+        var data = {_id: this.props.ID, body: this.state.text, UID: this.props.UID};
         axios.post('http://127.0.0.1:5000/api/writePost', data)
             .then(res => {
                 console.log("Respose: " + res);
@@ -265,7 +265,7 @@ class Feed extends React.Component {
     renderPost(i){
         const post = this.props.posts[i];
         return(
-            <Post body={post.body} location={post.location} price={post.points} ID={post._id}/>
+            <Post body={post.body} location={post.location} price={post.points} ID={post._id} UID={this.props.callback.getUID()}/>
         );
     }
 
@@ -427,6 +427,19 @@ class ProfileAccessReceiver extends React.Component{
     };
 
 
+    getPubs(){
+        if(this.state.pubfeeds != null)
+            return <Feed className="ft-left" posts = {this.state.pubfeeds} callback = {this.props.callback}/>;
+        return <div> Loading... </div>;
+    }
+
+    getUnpubs(){
+        if(this.state.pubfeeds != null)
+            return <Feed className="ft-right" posts = {this.state.unpubfeeds} callback = {this.props.callback}/>;
+        return <div> Loading... </div>;
+    }
+
+
     render(){
 
         var tree = null;
@@ -444,11 +457,11 @@ class ProfileAccessReceiver extends React.Component{
                 <div className = "entire">
                     <div className = "ft-left">
                         <h2>Posted</h2>
-                        <Feed className="ft-left" posts = {this.state.pubfeeds} />
+                        {this.getPubs()}
                     </div>
                     <div className="ft-right">
                         <h2> To post</h2>
-                        <Feed className="ft-right" posts = {this.state.unpubfeeds} />
+                        {this.getUnpubs()}
                     </div>
                 </div>
                 <div className="stuck">
@@ -554,13 +567,65 @@ class Profile extends React.Component {
 class Home extends React.Component{
     constructor(props){
         super(props);
+
+        this.state = {
+            feeds: null,
+            points: null
+        };
+
+
+
+    }
+
+    componentDidMount(){
+        this.getPoints();
+        this.getAllFeeds();
+    }
+
+    getPoints = () => {
+
+        var data = {_id: this.props.callback.getUID()};
+        axios.post('http://127.0.0.1:5000/api/getPoints', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.setState({points: res.data.points});
+            })
+            .catch(err => {console.log( err.toString())});
+    };
+
+    getAllFeeds = () => {
+
+        var data = {_id: this.props.callback.getUID()};
+        axios.post('http://127.0.0.1:5000/api/getAllFeeds', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.setState({feeds: res.data});
+            })
+            .catch(err => {console.log( err.toString())});
+    };
+
+    getPage(){
+        if(this.state.feeds != null)
+            return <Feed posts = {this.state.feeds} callback = {this.props.callback}/>
+        return <div> Loading... </div>
     }
 
     render(){
+        var tree = null;
+
+        if(this.state.points > 0)
+            tree = <Tree depth={this.state.points} />;
+
         return(
-            <div>
-                Hello This is the Home
-            </div>
+            <dib>
+                <br/><br/>
+                <div className="ft-center">
+                    {this.getPage()}
+                </div>
+                <div className="stuck">
+                    {tree}
+                </div>
+            </dib>
         );
     }
 }
@@ -624,12 +689,14 @@ class Main extends React.Component{
     }
 
     getPage(){
+        var cbk = {setUID: this.setUserID, getUID: this.getUserID, logout: this.logout, setUType: this.setUType, getUType: this.getUType};
+
         if(this.state.selection == "Home")
-            return <Home/>;
+            return <Home callback = {cbk}/>;
         if(this.state.selection == "Register")
             return <Register/>;
         if(this.state.selection == "Profile")
-            return <Profile callback = {{setUID: this.setUserID, getUID: this.getUserID, logout: this.logout, setUType: this.setUType, getUType: this.getUType}}/>;
+            return <Profile callback = {cbk}/>;
     }
 
     buttonEvent(sel){

@@ -108,6 +108,25 @@ app.post('/api/getPubFeeds', jsonParse, (req, res) => {
 
 });
 
+app.post('/api/getAllFeeds', jsonParse, (req, res) => {
+    console.log('Sending Response for all published feeds request');
+
+    dataBase.db.collection("feeds").find({body:{$ne: -1}}).sort({priority: -1}).toArray().then(
+        function(value){
+            res.send(value);
+
+            console.table(value);
+        }
+
+    ).catch(
+        function () {
+            console.log("Failed");
+            res.send(null);
+        }
+    );
+
+});
+
 app.post('/api/getUType', jsonParse, (req, res) => {
     console.log('Sending Response for type request');
     console.log('Searching id: ' + req.body._id );
@@ -166,8 +185,18 @@ app.post('/api/writePost', jsonParse, (req, res) => {
     console.log('Sending Response for writing post request');
     console.log('Searching id: ' + req.body._id );
 
-    dataBase.db.collection("feeds").findOneAndUpdate({_id: ObjectId(req.body._id)}, {$set: {body: req.body.body}});
-    res.send("Success");
+    dataBase.db.collection('users').findOne({_id: ObjectId(req.body.UID)}).then(
+        function(value){
+            var  prio = value.points;
+
+            dataBase.db.collection("feeds").findOneAndUpdate({_id: ObjectId(req.body._id)}, {$set: {body: req.body.body, priority:prio}});
+            res.send("Success");
+        }
+    ).catch(
+        function () {
+            res.send(null);
+        }
+    );
 
 });
 
