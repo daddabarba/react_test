@@ -257,7 +257,7 @@ class Post extends React.Component {
                 text = <div onClick={this.handleClick}> click here to write this</div>
             }
         }else{
-            text = <div>
+            text = <div style={{whiteSpace: 'no-wrap', width: '90%'}}>
                 {this.props.body}
             </div>
         }
