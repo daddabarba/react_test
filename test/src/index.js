@@ -24,6 +24,10 @@ var MapWrapApi =  GoogleApiWrapper({
 })(MapWrap);
 
 function drawFractalTree(context, depth){
+    if(depth>15){
+        depth = 15;
+    }
+    
     drawTree(context, depth*60, depth*80, -90, depth, depth);
 }
 function drawTree(context, x1, y1, angle, depth, maxDepth){
