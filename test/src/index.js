@@ -27,7 +27,7 @@ function drawFractalTree(context, depth){
     if(depth>15){
         depth = 15;
     }
-    
+
     drawTree(context, depth*60, depth*80, -90, depth, depth);
 }
 function drawTree(context, x1, y1, angle, depth, maxDepth){
@@ -183,11 +183,11 @@ class Register extends React.Component{
 
                     <div className="inline form-group">
                         <label htmlFor="password">Password</label>
-                        <input type="text" placeholder="password" onChange= {(event) => this.setState({password: event.target.value})} onKeyPress={this._handleKeyPress} />
+                        <input type="password" placeholder="password" onChange= {(event) => this.setState({password: event.target.value})} onKeyPress={this._handleKeyPress} />
                     </div>
                     <div className="inline form-group">
                         <label htmlFor="confpass">Confirm Password</label>
-                        <input type="text" placeholder="confirm password" onChange= {(event) => this.setState({confirmPassword: event.target.value})} onKeyPress={this._handleKeyPress} />
+                        <input type="password" placeholder="confirm password" onChange= {(event) => this.setState({confirmPassword: event.target.value})} onKeyPress={this._handleKeyPress} />
                     </div>
 
                     {loc}
