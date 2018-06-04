@@ -365,7 +365,7 @@ class ProfileLogin extends React.Component{
                 </div>
                 <div className="inline form-group">
                     <label htmlFor="passwordLogin">Password</label>
-                    <input type="text" placeholder="password" onChange= {(event) => this.setState({inputPass: event.target.value})} onKeyPress={this._handleKeyPress} />
+                    <input type="password" placeholder="password" onChange= {(event) => this.setState({inputPass: event.target.value})} onKeyPress={this._handleKeyPress} />
                 </div>
 
                 <br/><br/>
@@ -676,7 +676,7 @@ class Home extends React.Component{
                     <MapWrapApi/>
                 </div>
                 <br/><br/>
-                <div className="ft-center">
+                <div className="ft-left">
                     {this.getPage()}
                 </div>
                 <div className="stuck">
@@ -743,7 +743,7 @@ class UsersRanking extends React.Component{
         return(
             <div>
                 <br/><br/>
-                <div className="ft-center">
+                <div className="ft-left">
                     {this.getPage()}
                 </div>
                 <div className="stuck">
@@ -801,6 +801,7 @@ class Main extends React.Component{
     logOut(){
         this.setState({username: null});
         localStorage.removeItem('UID');
+        window.location.reload();
     }
 
     getUserID(){
