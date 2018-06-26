@@ -425,7 +425,7 @@ class ProfileAccessGiver extends React.Component{
                     </div>
                     <div className="inline form-group">
                         <label htmlFor="points">Amount of points</label>
-                        <input type="text" placeholder="points" onChange= {(event) => this.setState({points: event.target.value})} onKeyPress={this._handleKeyPress} />
+                        <input type="number" placeholder="points" onChange= {(event) => this.setState({points: event.target.value})} onKeyPress={this._handleKeyPress} />
                     </div>
 
                     <br/><br/>
