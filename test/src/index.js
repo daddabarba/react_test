@@ -8,6 +8,8 @@ import MapContainer from './MapContainer'
 import axios from 'axios';
 var querystring = require('querystring');
 
+const IP_SERVER = '178.128.38.194';
+
 class MapWrap extends React.Component {
     render() {
         return (
@@ -135,7 +137,7 @@ class Register extends React.Component{
         if(this.state.location)
             data.location = this.state.location;
 
-        axios.post('http://127.0.0.1:5000/api/addUser', data)
+        axios.post('http://' + IP_SERVER + ':5000/api/addUser', data)
             .then(res => {
                 console.log("Respose: " + res);
                 this.setState({result: res.data});
@@ -233,7 +235,7 @@ class Post extends React.Component {
     submitApi = () => {
 
         var data = {_id: this.props.ID, body: this.state.text, UID: this.props.UID};
-        axios.post('http://127.0.0.1:5000/api/writePost', data)
+        axios.post('http://' + IP_SERVER + ':5000/api/writePost', data)
             .then(res => {
                 console.log("Respose: " + res);
                 this.setState({result: res.data});
@@ -400,7 +402,7 @@ class ProfileAccessGiver extends React.Component{
     submit = () => {
 
         var data = {username: this.state.username, points: this.state.points, me: this.props.callback.getUID()};
-        axios.post('http://127.0.0.1:5000/api/givePoints', data)
+        axios.post('http://' + IP_SERVER + ':5000/api/givePoints', data)
             .then(res => {
                 console.log("Respose: " + res);
                 this.setState({result: res.data});
@@ -454,7 +456,7 @@ class ProfileAccessReceiver extends React.Component{
     getPubFeeds = () => {
 
         var data = {_id: this.props.callback.getUID()};
-        axios.post('http://127.0.0.1:5000/api/getPubFeeds', data)
+        axios.post('http://' + IP_SERVER + ':5000/api/getPubFeeds', data)
             .then(res => {
                 console.log("Respose: " + res);
                 this.setState({pubfeeds: res.data.reverse()});
@@ -465,7 +467,7 @@ class ProfileAccessReceiver extends React.Component{
     getUnpubFeeds = () => {
 
         var data = {_id: this.props.callback.getUID()};
-        axios.post('http://127.0.0.1:5000/api/getUnpubFeeds', data)
+        axios.post('http://' + IP_SERVER + ':5000/api/getUnpubFeeds', data)
             .then(res => {
                 console.log("Respose: " + res);
                 this.setState({unpubfeeds: res.data.reverse()});
@@ -476,7 +478,7 @@ class ProfileAccessReceiver extends React.Component{
     getPoints = () => {
 
         var data = {_id: this.props.callback.getUID()};
-        axios.post('http://127.0.0.1:5000/api/getPoints', data)
+        axios.post('http://' + IP_SERVER + ':5000/api/getPoints', data)
             .then(res => {
                 console.log("Respose: " + res);
                 this.setState({points: res.data.points});
@@ -548,7 +550,7 @@ class ProfileAccess extends React.Component{
     callApi = (UID) => {
 
         var data = {_id: UID};
-        axios.post('http://127.0.0.1:5000/api/getUType', data)
+        axios.post('http://' + IP_SERVER + ':5000/api/getUType', data)
             .then(res => {
                 console.log("Respose: " + res);
                 this.props.callback.setUType(res.data.type);
@@ -559,7 +561,7 @@ class ProfileAccess extends React.Component{
     getConfirmation = () => {
 
         var data = {_id: this.props.callback.getUID()};
-        axios.post('http://127.0.0.1:5000/api/getConfirmation', data)
+        axios.post('http://' + IP_SERVER + ':5000/api/getConfirmation', data)
             .then(res => {
                 console.log("Respose: " + res);
                 this.setState({allowed: res.data});
@@ -596,7 +598,7 @@ class Profile extends React.Component {
     callApi = (username, password) => {
 
         var data = {username: username, password: password};
-        axios.post('http://127.0.0.1:5000/api/login', data)
+        axios.post('http://' + IP_SERVER + ':5000/api/login', data)
             .then(res => {
                 console.log("Respose: " + res);
                 this.props.callback.setUID(res.data.userID);
@@ -643,7 +645,7 @@ class Home extends React.Component{
     getPoints = () => {
 
         var data = {_id: this.props.callback.getUID()};
-        axios.post('http://127.0.0.1:5000/api/getPoints', data)
+        axios.post('http://' + IP_SERVER + ':5000/api/getPoints', data)
             .then(res => {
                 console.log("Respose: " + res);
                 this.setState({points: res.data.points});
@@ -654,7 +656,7 @@ class Home extends React.Component{
     getAllFeeds = () => {
 
         var data = {_id: this.props.callback.getUID()};
-        axios.post('http://127.0.0.1:5000/api/getAllFeeds', data)
+        axios.post('http://'+ IP_SERVER +':5000/api/getAllFeeds', data)
             .then(res => {
                 console.log("Respose: " + res);
                 this.setState({feeds: res.data});
@@ -712,7 +714,7 @@ class UsersRanking extends React.Component{
     getPoints = () => {
 
         var data = {_id: this.props.callback.getUID()};
-        axios.post('http://127.0.0.1:5000/api/getPoints', data)
+        axios.post('http://' + IP_SERVER + ':5000/api/getPoints', data)
             .then(res => {
                 console.log("Respose: " + res);
                 this.setState({points: res.data.points});
@@ -724,7 +726,7 @@ class UsersRanking extends React.Component{
     getRanking = () => {
 
         var data = {_id: this.props.callback.getUID()};
-        axios.post('http://127.0.0.1:5000/api/getAllRanking', data)
+        axios.post('http://' + IP_SERVER + ':5000/api/getAllRanking', data)
             .then(res => {
                 console.log("Respose: " + res);
                 this.setState({users: res.data});

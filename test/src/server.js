@@ -13,7 +13,7 @@ const port = process.env.PORT || 5000;
 
 
 
-var url = "mongodb://localhost:27018/";
+var url = "mongodb://178.128.38.194:27018/";
 
 
 class dbWrap {
