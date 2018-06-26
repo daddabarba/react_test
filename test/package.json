@@ -4,9 +4,10 @@
   "private": true,
   "proxy": "http://localhost:5000/",
   "dependencies": {
-    "google-maps-react": "^1.1.0",
     "axios": "^0.18.0",
     "express": "^4.16.2",
+    "google-maps-react": "^1.1.0",
+    "mongodb": "^3.0.10",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-scripts": "1.1.4"
