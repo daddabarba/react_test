@@ -288,8 +288,8 @@ class Post extends React.Component {
                     {text}
                 </div>
                 <div className="container">
-                    <h4>From: <b>{this.props.location} [Points: {this.props.price}]</b></h4>
-                    <h2><p>User: {this.state.username}</p></h2>
+                    <h4>From: <b>{this.props.location}</b></h4>
+                    <h2><p>{this.state.publisher} + {this.props.price} (points)</p></h2>
                 </div>
             </div>
         );
