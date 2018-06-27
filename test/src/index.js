@@ -304,7 +304,7 @@ class Feed extends React.Component {
     renderPost(i){
         const post = this.props.posts[i];
         return(
-            <Post body={post.body} location={post.location} price={post.points} ID={post._id} UID={this.props.callback.getUID()}/>
+            <Post body={post.body} location={post.location} price={post.points} ID={post._id} UID={post.UID}/>
         );
     }
 
