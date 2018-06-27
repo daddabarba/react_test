@@ -219,7 +219,7 @@ class Post extends React.Component {
             selected: false,
             text: -1,
             result: null,
-            username: null
+            publisher: null
         };
 
         this.getUsername();
