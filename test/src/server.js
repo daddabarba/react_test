@@ -214,6 +214,24 @@ app.post('/api/getConfirmation', jsonParse, (req, res) => {
 
 });
 
+app.post('/api/getUsername', jsonParse, (req, res) => {
+    console.log('Sending Response for username request');
+    console.log('Searching id: ' + req.body._id );
+
+    dataBase.db.collection("users").findOne({_id: ObjectId(req.body._id)}).then(
+        function(value){
+            console.log("returning " + value.username);
+            res.send(value.username);
+        }
+
+    ).catch(
+        function () {
+            res.send(null);
+        }
+    );
+
+});
+
 
 app.post('/api/writePost', jsonParse, (req, res) => {
     console.log('Sending Response for writing post request');

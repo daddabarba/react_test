@@ -218,8 +218,11 @@ class Post extends React.Component {
             empty: this.props.body === -1 || this.props.body === "" || this.props.body == null,
             selected: false,
             text: -1,
-            result: null
+            result: null,
+            username: null
         };
+
+        this.getUsername();
     }
 
     handleClick = () => {
@@ -240,6 +243,17 @@ class Post extends React.Component {
                 console.log("Respose: " + res);
                 this.setState({result: res.data});
                 //window.location.reload()
+            })
+            .catch(err => {console.log( err.toString())});
+    };
+
+    getUsername = () => {
+
+        var data = {_id: this.props.UID};
+        axios.post('http://' + IP_SERVER + ':5000/api/getUsername', data)
+            .then(res => {
+                console.log("Respose: " + res);
+                this.setState({publisher: res.data});
             })
             .catch(err => {console.log( err.toString())});
     };
@@ -274,8 +288,8 @@ class Post extends React.Component {
                     {text}
                 </div>
                 <div className="container">
-                    <h4>From: <b>{this.props.location}</b></h4>
-                    <h2><p>Total points: {this.props.price}</p></h2>
+                    <h4>From: <b>{this.props.location} [Points: {this.props.price}]</b></h4>
+                    <h2><p>User: {this.state.username}</p></h2>
                 </div>
             </div>
         );
